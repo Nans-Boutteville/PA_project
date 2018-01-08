@@ -25,3 +25,7 @@ robot_wars/target/classes/moteur/Main.class
 robot_wars/target/classes/moteur/Robot.class
 robot_wars/target/classes/moteur/Vue.class
 robot_wars/.idea/workspace.xml
+robot_wars/.idea/workspace.xml
+robot_wars/src/main/.DS_Store
+*.class
+*.class

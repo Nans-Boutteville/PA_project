@@ -16,21 +16,24 @@ public class Robot {
     private Point point;
     private int vie;
     private int energie;
+    private Graphics graph;
 
     private ArrayList<Object> graphisme;
     private ArrayList<Object> attaque;
     private ArrayList<Object> deplacement;
 
-    public Robot() {
-        this(new Point(0, 0));
+    public Robot(Graphics g) {
+        this(new Point(0, 0),g);
     }
 
-    public Robot(Point point) {
+    public Robot(Point point,Graphics g) {
         this.point = point;
         this.vie = 100;
         this.energie = this.EENERGIEBASE;
+        this.graphisme= new ArrayList<Object>();
         this.attaque = new ArrayList<Object>();
         this.deplacement = new ArrayList<Object>();
+        this.graph=g;
     }
 
     public ArrayList<Object> getAttaque() {
@@ -41,8 +44,9 @@ public class Robot {
         return this.deplacement;
     }
 
-    public void addPLuginsGraphisme(Object graph) {
+    public void addPLuginsGraphisme(Object graph) throws InvocationTargetException, IllegalAccessException {
         graphisme.add(graph);
+        this.seDessiner(this.graph);
     }
 
     public void addPLuginsAttaque(Object attaque) { this.attaque.add(attaque); }
@@ -68,7 +72,7 @@ public class Robot {
 
     //Les différentes actions disponibles
 
-    public void seDessiner(Graphics g) throws InvocationTargetException, IllegalAccessException {
+    private void seDessiner(Graphics g) throws InvocationTargetException, IllegalAccessException {
         for (int i = 0; i < this.graphisme.size(); i++) {
             ArrayList<Method> allMethodsDessin = this.getMethodDessin(this.graphisme.get(i).getClass().getMethods());
             for (int j = 0; j < allMethodsDessin.size(); j++) {
@@ -243,7 +247,7 @@ public class Robot {
     }
 
     private Object invoke(Method m, Object o, Object... args) throws InvocationTargetException, IllegalAccessException {
-        return m.invoke(m, o, args);
+        return m.invoke( o, args);
     }
 
     private ArrayList<Method> getMethodDessin(Method[] allMethods) {
