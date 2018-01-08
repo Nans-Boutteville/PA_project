@@ -18,3 +18,5 @@ robot_wars/robot_wars.iml
 robot_wars/.settings/org.eclipse.m2e.core.prefs
 robot_wars/.project
 robot_wars/.classpath
+robot_wars/src/main/java/.DS_Store
+robot_wars/src/main/java/moteur/.DS_Store
