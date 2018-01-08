@@ -73,13 +73,15 @@ public class Robot {
     //Les différentes actions disponibles
 
     private void seDessiner(Graphics g) throws InvocationTargetException, IllegalAccessException {
-        for (int i = 0; i < this.graphisme.size(); i++) {
+        /*for (int i = 0; i < this.graphisme.size(); i++) {
             ArrayList<Method> allMethodsDessin = this.getMethodDessin(this.graphisme.get(i).getClass().getMethods());
             for (int j = 0; j < allMethodsDessin.size(); j++) {
                 this.dessiner(allMethodsDessin.get(j), this.graphisme.get(i), g);
             }
 
-        }
+        }*/
+        g.setColor(Color.RED);
+        g.fillRect(10,10,100,100);
     }
 
     private void dessiner(Method m, Object o, Graphics g) throws InvocationTargetException, IllegalAccessException {
