@@ -8,6 +8,7 @@ import java.util.Random;
 
 @Graphique
 public class Robot_affichage_plugins {
+    private int taille=40;
 
     @Dessiner
     public void dessiner(Graphics g,Point p){
@@ -17,7 +18,7 @@ public class Robot_affichage_plugins {
         float b = rand.nextFloat();
         Color c = g.getColor();
         g.setColor(new Color(r,gr,b));
-        g.fillRect(p.getX(),p.getY(),80,80);
+        g.fillRect((int)p.getX()+taille/2,(int)p.getY()+taille/2,taille,taille);
         g.setColor(c);
     }
 }
