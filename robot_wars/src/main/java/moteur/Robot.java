@@ -2,6 +2,7 @@ package moteur;
 
 import annotation.Dessiner;
 
+import javax.swing.*;
 import java.awt.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
@@ -59,13 +60,17 @@ public class Robot {
     //Les différentes actions disponibles
 
     public void seDessiner(Graphics g) throws InvocationTargetException, IllegalAccessException {
-        for (int i = 0; i < this.graphisme.size(); i++) {
+        /*for (int i = 0; i < this.graphisme.size(); i++) {
             ArrayList<Method> allMethodsDessin = this.getMethodDessin(this.graphisme.get(i).getClass().getMethods());
             for (int j = 0; j < allMethodsDessin.size(); j++) {
                 this.dessiner(allMethodsDessin.get(j), this.graphisme.get(i), g);
             }
 
-        }
+        }*/
+        System.out.println(g);
+        g.drawRect(10, 10, 200, 200);
+        g.setColor(Color.RED);
+        g.fillRect(10,10,200,200);
     }
 
     private void dessiner(Method m, Object o, Graphics g) throws InvocationTargetException, IllegalAccessException {
