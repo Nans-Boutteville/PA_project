@@ -31,6 +31,13 @@ public class Moteur {
         return r2d2;
     }
 
+    /**
+     * Les deux IA jouent tour par tour jusqu'à la mort d'une des deux
+     * @param player1
+     * @param player2
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     public void run(IAsimple player1, IAsimple player2) throws InvocationTargetException, IllegalAccessException {
         while (r1.getVie() > 0 && r2d2.getVie() > 0) {
             r1.reinitialiseEnergie();

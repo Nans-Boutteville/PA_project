@@ -10,6 +10,6 @@ public class Main {
         Moteur m = new Moteur(v.getG());
         IAsimple player1 = new IAsimple(m.getR1(), m.getR2d2());
         IAsimple player2 = new IAsimple(m.getR2d2(), m.getR1());
-        m.run(player1, player2);
+        m.run(player1, player2); //Lance une partie complète
     }
 }

@@ -14,20 +14,27 @@ public class IAsimple {
     }
 
     /**
-     *
+     * Tant qu'il reste de l'énergie au robot du joueur,
+     * on regarde toutes les attaques qu'il peut faire,
+     * l'IA attaque son ennemi tant qu'il peut attaquer
+     * sinon il se déplace
+     * Quand le robot n'a plus d'énergie le tour s'arrête
      * @return true, signifiant que le tour de l'IA est fini
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
     public boolean jouerTour() throws InvocationTargetException, IllegalAccessException {
-        robot.reinitialiseEnergie(); //remet l'énergie à 100
         while(robot.getEnergie() != 0){
+            //ATTAQUE
             ArrayList<Object> attaques = robot.getAttaque();
+
             for(Object o : attaques){
                 if(robot.peuAttaquer(o, ennemi)){
                     robot.attaque(o, ennemi);
                 }
             }
+
+            //DEPLACEMENT
             ArrayList<Object> deplacement = robot.getDeplacement();
 
             int randDistance = (int) Math.random() * robot.getEnergie();
