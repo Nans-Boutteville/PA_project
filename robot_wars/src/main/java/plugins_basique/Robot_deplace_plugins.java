@@ -10,10 +10,10 @@ import java.awt.*;
 public class Robot_deplace_plugins {
 
     @Deplacer
-    public Point deplacer(Graphics g,Point depart,int deplacement){
+    public Point deplacer(Graphics g,Point depart,int deplacementX,int deplacementY){
         Point retour;
-        int x =(int) Math.random() * (deplacement);
-        int y = (int)Math.random() * (deplacement-x);
+        int x =(int) (Math.random() * (deplacementX));
+        int y = ((int)Math.random() * (deplacementY));
 
         int alea = (int)Math.random();
         if(alea==0){
@@ -25,7 +25,7 @@ public class Robot_deplace_plugins {
     }
 
     @CalculDeplacement
-    public int calculEnergie(Graphics g,int deplacement){
-        return deplacement;
+    public int calculEnergie(int deplacementX,int deplacementY){
+        return deplacementX+deplacementY;
     }
 }

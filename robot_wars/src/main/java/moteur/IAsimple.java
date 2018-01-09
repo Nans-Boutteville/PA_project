@@ -29,7 +29,7 @@ public class IAsimple {
             ArrayList<Object> attaques = robot.getAttaque();
 
             for(Object o : attaques){
-                if(robot.peuAttaquer(o, ennemi)){
+                if(robot.peutAttaquer(o, ennemi)){
                     robot.attaque(o, ennemi);
                 }
             }

@@ -11,7 +11,11 @@ public class Robot_attaque_plugins {
     public boolean attaque(Point p1, Point p2, Graphics g) {
         boolean returnF = false;
         if (p1.getX() > p2.getX()) {
-            if (p1.getX() - p2.getX() < 10) {
+            if (p1.getX() - p2.getX() < portee) {
+                returnF = true;
+            }
+        }else{
+            if (p2.getX() - p1.getX() < portee) {
                 returnF = true;
             }
         }
