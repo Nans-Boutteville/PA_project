@@ -1,6 +1,8 @@
 package moteur;
 
 import annotation.Attaque;
+import annotation.CalculDeplacement;
+import annotation.Deplacer;
 import annotation.Dessiner;
 
 import java.awt.*;
@@ -69,9 +71,9 @@ public class Robot {
         return this.energie;
     }
 
-    public void reinitialiseEnergie() {
+    public void reinitialiseEnergie() throws InvocationTargetException, IllegalAccessException {
         this.energie = this.EENERGIEBASE;
-        ;
+        this.seDessiner(this.graph);
     }
 
     //Les différentes actions disponibles
@@ -130,16 +132,16 @@ public class Robot {
                 break;
             case 2:
                 if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                    this.invoke(m, o, this.point, energie, g);
+                    this.invoke(m, o, this.point, arg, g);
                 } else {
                     this.invoke(m, o, g, arg, this.point);
                 }
                 break;
             default:
                 if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                    m.invoke(o, this.point, arg, g);
+                    m.invoke(o, this.point, g, arg);
                 } else {
-                    m.invoke(o, g, arg, this.point);
+                    m.invoke(o, g, this.point,arg);
                 }
                 break;
         }
@@ -274,11 +276,9 @@ public class Robot {
         return returnM;
     }
 
-    public void seDeplacer() {
 
-    }
 
-    public void attaquer(Object plugins,Graphics g, Robot r) throws InvocationTargetException, IllegalAccessException {
+    public void attaque(Object plugins, Robot r) throws InvocationTargetException, IllegalAccessException {
         if(this.attaque.contains(plugins)){
             Class attaque = plugins.getClass();
             Method[] allMethods = attaque.getMethods();
@@ -287,7 +287,7 @@ public class Robot {
 
                 if(allMethods[i].getParameterTypes().length==3){
                     if(allMethods[i].getParameterTypes()[0].getName().equals("java.awt.Graphics") && allMethods[i].getReturnType().getName().equals("boolean")){
-                        boolean bienAttaque = invokeMethodsAttack(allMethods[i],plugins,g,r.getCoordonnee());
+                        boolean bienAttaque = invokeMethodsAttack(allMethods[i],plugins,this.graph,r.getCoordonnee());
                         if(bienAttaque){
                             Attaque attaqueA = (Attaque)attaque.getAnnotation(Attaque.class);
                             this.energie-=attaqueA.perteEnergie();
@@ -297,6 +297,24 @@ public class Robot {
                 }
             }
         }
+    }
+
+    public boolean peuAttaquer(Object plugins,Robot r) throws InvocationTargetException, IllegalAccessException {
+        boolean returnAttack =false;
+        if(this.attaque.contains(plugins)){
+            Class attaque = plugins.getClass();
+            Method[] allMethods = attaque.getMethods();
+            for(int i=0;i<allMethods.length;i++){
+
+
+                if(allMethods[i].getParameterTypes().length==3){
+                    if(allMethods[i].getParameterTypes()[0].getName().equals("java.awt.Graphics") && allMethods[i].getReturnType().getName().equals("boolean")){
+                         returnAttack = invokeMethodsAttack(allMethods[i],plugins,this.graph,r.getCoordonnee());
+                    }
+                }
+            }
+        }
+        return returnAttack;
     }
 
     public void degats (int perteVie) throws InvocationTargetException, IllegalAccessException {
@@ -341,5 +359,134 @@ public class Robot {
 
         return returnA;
     }
+
+    public void seDeplacer(Object plugins,int deplacement) throws InvocationTargetException, IllegalAccessException {
+        if(this.deplacement.contains(plugins)){
+            Class deplacemen = plugins.getClass();
+            this.invokeMethodDeplacement(deplacemen.getMethods(),plugins,deplacement);
+
+        }
+    }
+
+    private void invokeMethodDeplacement(Method[] methods,Object o,int deplacement) throws InvocationTargetException, IllegalAccessException {
+        Method methodDeplacement=null;
+        for(Method method:methods){
+            if(method.getAnnotation(Deplacer.class)!=null && method.getReturnType().getName().equals("java.awt.Point")){
+                methodDeplacement=method;
+                break;
+            }
+        }
+
+        if(methodDeplacement==null){
+            for(Method method:methods){
+                if(this.getArgumentofDeplacementMethod(method,deplacement).length==3 && method.getReturnType().getName().equals("java.awt.Point")){
+                    methodDeplacement=method;
+                    break;
+                }
+            }
+        }
+        if(methodDeplacement!=null){
+            int coutEnergie = this.coutEnergieDeplacement(o,deplacement);
+            if(coutEnergie>-1){
+                Object[] args = getArgumentofDeplacementMethod(methodDeplacement,deplacement);
+                this.point = (Point)this.invoke(methodDeplacement,o,args[0],args[1],args[2]);
+                this.energie-=coutEnergie;
+                this.seDessiner(this.graph);
+            }
+
+        }
+
+    }
+
+    public Point CalculPointDeplacement(Method[] methods,Object o,int deplacement) throws InvocationTargetException, IllegalAccessException {
+        Method methodDeplacement=null;
+        for(Method method:methods){
+            if(method.getAnnotation(Deplacer.class)!=null && method.getReturnType().getName().equals("java.awt.Point")){
+                methodDeplacement=method;
+                break;
+            }
+        }
+
+        if(methodDeplacement==null){
+            for(Method method:methods){
+                if(this.getArgumentofDeplacementMethod(method,deplacement).length==3 && method.getReturnType().getName().equals("java.awt.Point")){
+                    methodDeplacement=method;
+                    break;
+                }
+            }
+        }
+        if(methodDeplacement!=null){
+            int coutEnergie = this.coutEnergieDeplacement(o,deplacement);
+            if(coutEnergie>-1){
+                Object[] args = getArgumentofDeplacementMethod(methodDeplacement,deplacement);
+                return (Point)this.invoke(methodDeplacement,o,args[0],args[1],args[2]);
+            }
+
+        }
+        return null;
+
+    }
+
+    private Object[] getArgumentofDeplacementMethod(Method method,int deplacement){
+        Object[] args = new Object[3];
+        Class[] allaParameters = method.getParameterTypes();
+        if(allaParameters.length==3){
+            for(Class parameters : allaParameters){
+                if(parameters.getName().equals("java.awt.Graphics")){
+                    if(args.length==0){ args[0]=this.graph;
+                    }else if(args.length==1) { args[1] = this.graph;
+                    }else{
+                        args[2]=this.graph;
+                    }
+                }else if(parameters.getName().equals("java.awt.Point")){
+                    if(args.length==0){ args[0]=this.point;
+                    }else if(args.length==1) { args[1] = this.point;
+                    }else{
+                        args[2]=this.point;
+                    }
+                }else if (parameters.getName().equals("int")){
+                    if(args.length==0){ args[0]=deplacement;
+                    }else if(args.length==1) { args[1] = deplacement;
+                    }else{
+                        args[2]=deplacement;
+                    }
+                }
+            }
+        }
+        return args;
+    }
+
+    public int coutEnergieDeplacement(Object plugins,int deplacement) throws InvocationTargetException, IllegalAccessException {
+        if(this.deplacement.contains(plugins)){
+            Class deplacemen = plugins.getClass();
+            return this.invokeMethodDeplacementCoutEnergie(deplacemen.getMethods(),plugins,deplacement);
+
+        }
+        return -1;
+    }
+
+    private int invokeMethodDeplacementCoutEnergie(Method[] methods,Object o,int deplacement) throws InvocationTargetException, IllegalAccessException {
+        Method methodDeplacement=null;
+        for(Method method:methods){
+            if(method.getAnnotation(CalculDeplacement.class)!=null && method.getReturnType().getName().equals("int")){
+                methodDeplacement=method;
+                break;
+            }
+        }
+
+        if(methodDeplacement==null){
+            for(Method method:methods){
+                if(method.getParameterTypes().length==1 && method.getParameterTypes()[0].getName().equals("int") && method.getReturnType().getName().equals("int")){
+                    methodDeplacement=method;
+                    break;
+                }
+            }
+        }
+        if(methodDeplacement!=null){
+            return (Integer) this.invoke(methodDeplacement,o,deplacement);
+        }
+        return -1;
+    }
+
 
 }

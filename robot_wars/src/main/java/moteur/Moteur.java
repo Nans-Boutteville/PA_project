@@ -2,6 +2,7 @@ package moteur;
 
 import plugins_basique.Robot_affichage_plugins;
 import plugins_basique.Robot_attaque_plugins;
+import plugins_basique.Robot_deplace_plugins;
 
 import java.awt.*;
 import java.lang.annotation.Annotation;
@@ -33,10 +34,13 @@ public class Moteur {
     private void implementsDefaultPlugins() throws InvocationTargetException, IllegalAccessException {
         Robot_affichage_plugins graph= new Robot_affichage_plugins();
         Robot_attaque_plugins attaque= new Robot_attaque_plugins();
+        Robot_deplace_plugins deplace = new Robot_deplace_plugins();
         r1.addPLuginsGraphisme(graph);
         r2d2.addPLuginsGraphisme(graph);
         r1.addPLuginsAttaque(attaque);
         r2d2.addPLuginsAttaque(attaque);
+        r1.addPlunginsDeplacement(deplace);
+        r2d2.addPlunginsDeplacement(deplace);
     }
 
     private void implementsOtherPlugins() throws InvocationTargetException, IllegalAccessException {
