@@ -37,7 +37,7 @@ public class IAsimple {
             //DEPLACEMENT
             ArrayList<Object> deplacement = robot.getDeplacement();
 
-            int randDistance = (int) Math.random() * robot.getEnergie();
+            int randDistance = (int) (Math.random() * robot.getEnergie());
 
             if(deplacement.size() == 1 ){
                 robot.seDeplacer(deplacement.get(0), randDistance);
