@@ -391,11 +391,73 @@ public class Robot {
             int coutEnergie = this.coutEnergieDeplacement(o,deplacementX,deplacementY);
             ArrayList<Object> args = getArgumentofDeplacementMethod(methodDeplacement,deplacementX,deplacementY);
             if(coutEnergie>-1 && args.size()==4){
-                this.point.setLocation((Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3)));
+                Point p = (Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3));
+                while((int)p.getX()!=(int)this.point.getX() && (int)p.getY()!=(int)this.point.getY()){
+                    int x,y;
+                    if(p.getX()>this.point.getX()){
+                        int add=1;
+                        if(p.getX()>this.point.getX()+100) {
+                            add=100;
+                        }else if(p.getX()>this.point.getX()+50) {
+                            add=50;
+                        }else if(p.getX()>this.point.getX()+10){
+                            add=10;
+                        }else if(p.getX()>this.point.getX()+5){
+                            add=5;
+                        }
+                        x=(int)this.point.getX()+add;
+                    }else{
+                        int add=1;
+                         if(p.getX()>this.point.getX()-100) {
+                             add=100;
+                         }else if(p.getX()>this.point.getX()-50) {
+                             add=50;
+                         }else if(p.getX()>this.point.getX()-10){
+                            add=10;
+                        }else if(p.getX()>this.point.getX()-5){
+                            add=5;
+                        }
+                        x=(int)this.point.getX()-add;
+                    }
+                    if(p.getY()>this.point.getY()){
+                        int add=1;
+                        if(p.getY()>this.point.getY()+100) {
+                            add=100;
+                        }else if(p.getY()>this.point.getY()+50) {
+                            add=50;
+                        }else
+                        if(p.getY()>this.point.getY()+10){
+                            add=10;
+                        }else if(p.getY()>this.point.getY()+5){
+                            add=5;
+                        }
+                        y=(int)this.point.getY()+add;
+                    }else{
+                        int add=1;
+                        if(p.getY()>this.point.getY()-100) {
+                            add=100;
+                        }else if(p.getY()>this.point.getY()-50) {
+                            add=50;
+                        }else if(p.getY()>this.point.getY()-10){
+                            add=10;
+                        }else if(p.getY()>this.point.getY()-5){
+                            add=5;
+                        }
+                        y=(int)this.point.getY()-add;
+                    }
+                    this.point.setLocation(new Point(x,y));
+                    this.graph.repaint();
+                   /* try {
+                        Thread.currentThread().sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }*/
+                }
+
                 //this.point = (Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3));
                 this.energie-=coutEnergie;
 
-                this.graph.repaint();
+
             }
 
         }

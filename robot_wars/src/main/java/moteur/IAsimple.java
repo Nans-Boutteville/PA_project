@@ -24,7 +24,7 @@ public class IAsimple {
      * @throws IllegalAccessException
      */
     public boolean jouerTour() throws InvocationTargetException, IllegalAccessException {
-        while(robot.getEnergie() != 0){
+        while(robot.getEnergie() > 1){
             //ATTAQUE
             ArrayList<Object> attaques = robot.getAttaque();
 
@@ -37,8 +37,13 @@ public class IAsimple {
             //DEPLACEMENT
             ArrayList<Object> deplacement = robot.getDeplacement();
 
-            int randDistanceX = (int) (Math.random() * robot.getEnergie()/2);
-            int randDistanceY = (int) (Math.random() * robot.getEnergie()/2);
+            System.out.println(robot.getEnergie());
+
+            int randDistanceX = (int) (Math.random() * robot.getEnergie());
+            int randDistanceY = (int) (Math.random() * robot.getEnergie());
+
+            System.out.println("X = " + randDistanceX);
+            System.out.println("Y = " + randDistanceY);
 
             if(deplacement.size() == 1 ){
                 robot.seDeplacer(deplacement.get(0), randDistanceX, randDistanceY);
