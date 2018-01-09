@@ -24,7 +24,7 @@ public class IAsimple {
      * @throws IllegalAccessException
      */
     public boolean jouerTour() throws InvocationTargetException, IllegalAccessException {
-        while(robot.getEnergie() > 0){
+        while(robot.getEnergie() > 1){
             //ATTAQUE
             ArrayList<Object> attaques = robot.getAttaque();
 
