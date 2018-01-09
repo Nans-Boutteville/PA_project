@@ -7,21 +7,20 @@ import java.awt.*;
 
 
 public class Vue extends JPanel{
-    Graphics g;
+    JPanel panel;
 
-    public Vue(){
+    public Vue(Robot r1, Robot r2){
         JFrame frame = new JFrame();
-        JPanel panel = new JPanel();
+        this.panel = new VuePanel(r1,r2);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Robot Wars Ultimate !");
         frame.setSize(600,600);
         frame.setLocationRelativeTo(null);
         frame.add(panel, BorderLayout.CENTER );
-        frame.setVisible(true);
-        this.g = panel.getGraphics();
+        frame.setVisible(true);;
     }
 
-    public Graphics getG() {
-        return g;
+    public JPanel getPanel() {
+        return this.panel;
     }
 }

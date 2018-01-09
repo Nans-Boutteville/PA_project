@@ -4,6 +4,7 @@ import plugins_basique.Robot_affichage_plugins;
 import plugins_basique.Robot_attaque_plugins;
 import plugins_basique.Robot_deplace_plugins;
 
+import javax.swing.*;
 import java.awt.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -17,9 +18,12 @@ public class Moteur {
     private ArrayList<Class> classAttaque;
     private ArrayList<Class> classDeplacement;
 
-    public Moteur(Graphics g) throws InvocationTargetException, IllegalAccessException {
-        r1=new Robot(new Point(10,10),g);
-        r2d2 = new Robot(new Point(300,10),g);
+    public Moteur() throws InvocationTargetException, IllegalAccessException {
+        r1=new Robot(new Point(10,10));
+        r2d2 = new Robot(new Point(300,10));
+        Vue v = new Vue(r1,r2d2);
+        r1.setGraph(v.getPanel());
+        r2d2.setGraph(v.getPanel());
         this.implementsPlugins();
     }
 
@@ -37,8 +41,9 @@ public class Moteur {
      * @param player2
      * @throws InvocationTargetException
      * @throws IllegalAccessException
+     * @throws InterruptedException
      */
-    public void run(IAsimple player1, IAsimple player2) throws InvocationTargetException, IllegalAccessException {
+    public void run(IAsimple player1, IAsimple player2) throws InvocationTargetException, IllegalAccessException, InterruptedException {
         while (r1.getVie() > 0 && r2d2.getVie() > 0) {
             r1.reinitialiseEnergie();
             r2d2.reinitialiseEnergie();
