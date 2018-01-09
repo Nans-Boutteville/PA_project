@@ -23,6 +23,25 @@ public class Moteur {
         this.implementsPlugins();
     }
 
+    public Robot getR1() {
+        return r1;
+    }
+
+    public Robot getR2d2() {
+        return r2d2;
+    }
+
+    public void run(IAsimple player1, IAsimple player2) throws InvocationTargetException, IllegalAccessException {
+        while (r1.getVie() > 0 && r2d2.getVie() > 0) {
+            r1.reinitialiseEnergie();
+            r2d2.reinitialiseEnergie();
+            player1.jouerTour();
+            if (r2d2.getVie() > 0){
+                player2.jouerTour();
+            }
+        }
+    }
+
     private void implementsPlugins() throws InvocationTargetException, IllegalAccessException {
         this.implementsDefaultPlugins();
         this.classGraphique=new ArrayList<Class>();
