@@ -37,13 +37,14 @@ public class IAsimple {
             //DEPLACEMENT
             ArrayList<Object> deplacement = robot.getDeplacement();
 
-            int randDistance = (int) Math.random() * robot.getEnergie();
+            int randDistanceX = (int) (Math.random() * robot.getEnergie()/2);
+            int randDistanceY = (int) (Math.random() * robot.getEnergie()/2);
 
             if(deplacement.size() == 1 ){
-                robot.seDeplacer(deplacement.get(0), randDistance);
+                robot.seDeplacer(deplacement.get(0), randDistanceX, randDistanceY);
             } else if (deplacement.size() > 1) {
                 int rand = (int) (Math.random() * deplacement.size());
-                robot.seDeplacer(deplacement.get(rand), randDistance);
+                robot.seDeplacer(deplacement.get(rand), randDistanceX, randDistanceY);
             }
         } return tourfini = true;
     }
