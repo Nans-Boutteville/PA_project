@@ -12,7 +12,6 @@ public class Robot_attaque_plugins {
     private int portee = 100;
 
     public boolean attaque(Point p1, Point p2, Graphics g) {
-        System.out.println("TEST ATTAQUE");
         boolean returnF = false;
         if (p1.getX() > p2.getX()) {
             if (p1.getX() - p2.getX() < portee) {
