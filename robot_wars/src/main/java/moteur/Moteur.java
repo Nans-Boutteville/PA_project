@@ -47,6 +47,7 @@ public class Moteur {
      */
     public void run(ArrayList<IAsimple> ias) throws InvocationTargetException, IllegalAccessException, InterruptedException {
         boolean fin =false;
+        ArrayList<Robot> rob = (ArrayList<Robot>) this.getRobots().clone();
         while (!fin) {
             for(Robot r:robots){
                 r.reinitialiseEnergie();
@@ -57,9 +58,21 @@ public class Moteur {
                     p1.run();
                     p1.join();
                 }else{
-                    fin=true;
-                    break;
+                    rob.remove(ia.getRobot());
+                    this.removeEnnemi(ias, ia);
+                    if(rob.size() == 1){
+                        fin=true;
+                        break;
+                    }
                 }
+            }
+        }
+    }
+
+    private void removeEnnemi (ArrayList<IAsimple> arrayIA,IAsimple ia){
+        for(IAsimple iasimple : arrayIA){
+            if (!iasimple.equals(ia)){
+                iasimple.removeEnnemi(ia.getRobot());
             }
         }
     }

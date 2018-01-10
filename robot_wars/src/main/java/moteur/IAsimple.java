@@ -16,6 +16,10 @@ public class IAsimple implements Runnable {
         }
     }
 
+    public Robot getRobot() {
+        return robot;
+    }
+
     /**
      * Tant qu'il reste de l'énergie au robot du joueur,
      * on regarde toutes les attaques qu'il peut faire,
@@ -73,5 +77,9 @@ public class IAsimple implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void removeEnnemi(Robot robot) {
+        this.ennemis.remove(robot);
     }
 }
