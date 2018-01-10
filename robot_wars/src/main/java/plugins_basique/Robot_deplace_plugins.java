@@ -18,10 +18,21 @@ public class Robot_deplace_plugins {
 
         Random random = new Random();
         boolean alea= random.nextBoolean();
+        boolean alea2 = random.nextBoolean();
         if(alea){
-            retour=new Point((int)depart.getX()+x,(int)depart.getY()+y);
+            if (alea2){
+                retour=new Point((int)depart.getX()+x,(int)depart.getY()+y);
+            } else {
+                retour=new Point((int)depart.getX()+x,(int)depart.getY()-y);
+            }
+
         }else{
-            retour= new Point((int)depart.getX()-x,(int)depart.getY()-y);
+            if(alea2){
+                retour= new Point((int)depart.getX()-x,(int)depart.getY()+y);
+            } else{
+                retour= new Point((int)depart.getX()-x,(int)depart.getY()-y);
+            }
+
         }
        return retour;
     }
