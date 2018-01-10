@@ -1,9 +1,11 @@
 package plugins_basique;
 
 import annotation.Dessiner;
+import annotation.Graphique;
 
 import java.awt.*;
 
+@Graphique
 public class Robot_affichageBarreDEnergie_plugins {
 
     @Dessiner(argumentEnergie = 3)
