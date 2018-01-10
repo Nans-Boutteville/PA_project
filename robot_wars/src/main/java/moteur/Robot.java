@@ -392,9 +392,22 @@ public class Robot {
             ArrayList<Object> args = getArgumentofDeplacementMethod(methodDeplacement,deplacementX,deplacementY);
             if(coutEnergie>-1 && args.size()==4){
                 Point p = (Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3));
-                this.point.setLocation(p);
+                int largeur = this.graph.getWidth();
+                int hauteur = this.graph.getHeight();
+                int x = (int)p.getX();
+                int y = (int)p.getY();
+                if(p.getX()>largeur-40){
+                    x=largeur-40;
+                }else if(p.getX()<40){
+                    x=40;
+                }
+                if(p.getY()>hauteur-40){
+                    y=hauteur-40;
+                }else if(p.getY()<40){
+                    y=40;
+                }
+                this.point.setLocation(new Point(x,y));
                 Thread.currentThread().sleep(10);
-                //this.point = (Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3));
                 this.energie-=coutEnergie;
 
 
