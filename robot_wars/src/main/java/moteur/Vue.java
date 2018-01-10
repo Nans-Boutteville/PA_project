@@ -14,7 +14,7 @@ public class Vue extends JPanel{
         this.panel = new VuePanel(r1,r2);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Robot Wars Ultimate !");
-        frame.setSize(600,600);
+        frame.setSize(800,800);
         frame.setLocationRelativeTo(null);
         frame.add(panel, BorderLayout.CENTER );
         frame.setVisible(true);;
