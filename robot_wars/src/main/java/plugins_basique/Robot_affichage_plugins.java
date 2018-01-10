@@ -36,8 +36,8 @@ public class Robot_affichage_plugins {
        //Code de test en dessous à supprimer quand les autres plugins pourront être chargés
 
         //Robot_affichageImage
-
         try {
+
             Image img = ImageIO.read(new File("images/evil-robot.png"));
             g.drawImage(img,(int)p.getX(),(int)p.getY(),100,100,null);
         } catch (IOException e) {

@@ -30,7 +30,6 @@ public class Robot {
     }
 
     public Robot(Point point) {
-        System.out.println("TEST CREATION");
         this.point = point;
         this.vie = 100;
         this.energie = this.EENERGIEBASE;
@@ -460,7 +459,7 @@ public class Robot {
                     y=40;
                 }
                 this.point.setLocation(new Point(x,y));
-                Thread.currentThread().sleep(50);
+                Thread.currentThread().sleep(15);
                 this.energie-=coutEnergie;
 
 
