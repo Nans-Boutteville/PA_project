@@ -1,2 +1,4 @@
-public class testIAsimple {
+import org.junit.Test;
+
+public class TestIAsimple {
 }
