@@ -14,12 +14,12 @@ public class Robot_affichageBarreDeVie_plugins {
 
     @Dessiner(argumentVie = 3)
     public void dessiner(Graphics g, Point p, int life){
-        //JLabel vie = new JLabel("");
-       // vie.setOpaque(true);
-        //vie.setBounds(new Rectangle((int)point.getX(), (int)point.getY() + 90, life, 10));
-       // vie.setBackground(Color.green);
-        String chaine= "Vie : "+life;
-        g.drawString(chaine, (int) p.getX(), (int) p.getY()+90);
+
+        //String chaine= "Vie : "+life;
+        //g.drawString(chaine, (int) p.getX(), (int) p.getY()+90);
+
+        g.setColor(Color.GREEN);
+        g.fillRect((int)p.getX(), (int)p.getY() + 100, life, 10);
 
     }
 }
