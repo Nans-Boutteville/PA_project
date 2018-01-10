@@ -47,9 +47,13 @@ public class Moteur {
         while (r1.getVie() > 0 && r2d2.getVie() > 0) {
             r1.reinitialiseEnergie();
             r2d2.reinitialiseEnergie();
-            player1.jouerTour();
+            Thread p1 = new Thread(player1);
+            p1.run();
+            p1.join();
             if (r2d2.getVie() > 0){
-                player2.jouerTour();
+                Thread p2 = new Thread(player2);
+                p2.run();
+                p2.join();
             }
         }
     }
@@ -63,15 +67,18 @@ public class Moteur {
     }
 
     private void implementsDefaultPlugins() throws InvocationTargetException, IllegalAccessException {
-        Robot_affichage_plugins graph= new Robot_affichage_plugins();
-        Robot_attaque_plugins attaque= new Robot_attaque_plugins();
-        Robot_deplace_plugins deplace = new Robot_deplace_plugins();
-        r1.addPLuginsGraphisme(graph);
-        r2d2.addPLuginsGraphisme(graph);
-        r1.addPLuginsAttaque(attaque);
-        r2d2.addPLuginsAttaque(attaque);
-        r1.addPlunginsDeplacement(deplace);
-        r2d2.addPlunginsDeplacement(deplace);
+        Robot_affichage_plugins graph1= new Robot_affichage_plugins();
+        Robot_attaque_plugins attaque1= new Robot_attaque_plugins();
+        Robot_deplace_plugins deplace1 = new Robot_deplace_plugins();
+        Robot_affichage_plugins graph2= new Robot_affichage_plugins();
+        Robot_attaque_plugins attaque2= new Robot_attaque_plugins();
+        Robot_deplace_plugins deplace2 = new Robot_deplace_plugins();
+        r1.addPLuginsGraphisme(graph1);
+        r2d2.addPLuginsGraphisme(graph2);
+        r1.addPLuginsAttaque(attaque1);
+        r2d2.addPLuginsAttaque(attaque2);
+        r1.addPlunginsDeplacement(deplace1);
+        r2d2.addPlunginsDeplacement(deplace2);
     }
 
     private void implementsOtherPlugins() throws InvocationTargetException, IllegalAccessException {
@@ -82,24 +89,27 @@ public class Moteur {
             this.addClassWithAnnotation(c);
         }
         for(Class graphique : this.classGraphique){
-            Object o = implementsClass(graphique);
-            if(o!=null){
-                r1.addPLuginsGraphisme(o);
-                r2d2.addPLuginsGraphisme(o);
+            Object o1 = implementsClass(graphique);
+            Object o2 = implementsClass(graphique);
+            if(o1!=null && o2!=null){
+                r1.addPLuginsGraphisme(o1);
+                r2d2.addPLuginsGraphisme(o2);
             }
         }
         for(Class attaque : this.classAttaque){
-            Object o = implementsClass(attaque);
-            if(o!=null){
-                r1.addPLuginsAttaque(o);
-                r2d2.addPLuginsAttaque(o);
+            Object o1 = implementsClass(attaque);
+            Object o2 = implementsClass(attaque);
+            if(o1!=null && o2!=null){
+                r1.addPLuginsAttaque(o1);
+                r2d2.addPLuginsAttaque(o2);
             }
         }
         for(Class deplacement : this.classDeplacement){
-            Object o = implementsClass(deplacement);
-            if(o!=null){
-                r1.addPlunginsDeplacement(o);
-                r2d2.addPlunginsDeplacement(o);
+            Object o1 = implementsClass(deplacement);
+            Object o2 = implementsClass(deplacement);
+            if(o1!=null && o2!=null){
+                r1.addPlunginsDeplacement(o1);
+                r2d2.addPlunginsDeplacement(o2);
             }
         }
 

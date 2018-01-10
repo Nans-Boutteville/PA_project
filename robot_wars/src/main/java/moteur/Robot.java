@@ -363,14 +363,14 @@ public class Robot {
         return returnA;
     }
 
-    public void seDeplacer(Object plugins,int deplacementX,int deplacementY) throws InvocationTargetException, IllegalAccessException {
+    public void seDeplacer(Object plugins,int deplacementX,int deplacementY) throws InvocationTargetException, IllegalAccessException, InterruptedException {
         if(this.deplacement.contains(plugins)){
             Class deplacemen = plugins.getClass();
             this.invokeMethodDeplacement(deplacemen.getMethods(),plugins,deplacementX,deplacementY);
         }
     }
 
-    private void invokeMethodDeplacement(Method[] methods,Object o,int deplacementX,int deplacementY) throws InvocationTargetException, IllegalAccessException {
+    private void invokeMethodDeplacement(Method[] methods,Object o,int deplacementX,int deplacementY) throws InvocationTargetException, IllegalAccessException, InterruptedException {
         Method methodDeplacement=null;
         for(Method method:methods){
             if(method.getAnnotation(Deplacer.class)!=null && method.getReturnType().getName().equals("java.awt.Point")){
@@ -392,68 +392,8 @@ public class Robot {
             ArrayList<Object> args = getArgumentofDeplacementMethod(methodDeplacement,deplacementX,deplacementY);
             if(coutEnergie>-1 && args.size()==4){
                 Point p = (Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3));
-                while((int)p.getX()!=(int)this.point.getX() && (int)p.getY()!=(int)this.point.getY()){
-                    int x,y;
-                    if(p.getX()>this.point.getX()){
-                        int add=1;
-                        if(p.getX()>this.point.getX()+100) {
-                            add=100;
-                        }else if(p.getX()>this.point.getX()+50) {
-                            add=50;
-                        }else if(p.getX()>this.point.getX()+10){
-                            add=10;
-                        }else if(p.getX()>this.point.getX()+5){
-                            add=5;
-                        }
-                        x=(int)this.point.getX()+add;
-                    }else{
-                        int add=1;
-                         if(p.getX()>this.point.getX()-100) {
-                             add=100;
-                         }else if(p.getX()>this.point.getX()-50) {
-                             add=50;
-                         }else if(p.getX()>this.point.getX()-10){
-                            add=10;
-                        }else if(p.getX()>this.point.getX()-5){
-                            add=5;
-                        }
-                        x=(int)this.point.getX()-add;
-                    }
-                    if(p.getY()>this.point.getY()){
-                        int add=1;
-                        if(p.getY()>this.point.getY()+100) {
-                            add=100;
-                        }else if(p.getY()>this.point.getY()+50) {
-                            add=50;
-                        }else
-                        if(p.getY()>this.point.getY()+10){
-                            add=10;
-                        }else if(p.getY()>this.point.getY()+5){
-                            add=5;
-                        }
-                        y=(int)this.point.getY()+add;
-                    }else{
-                        int add=1;
-                        if(p.getY()>this.point.getY()-100) {
-                            add=100;
-                        }else if(p.getY()>this.point.getY()-50) {
-                            add=50;
-                        }else if(p.getY()>this.point.getY()-10){
-                            add=10;
-                        }else if(p.getY()>this.point.getY()-5){
-                            add=5;
-                        }
-                        y=(int)this.point.getY()-add;
-                    }
-                    this.point.setLocation(new Point(x,y));
-                    this.graph.repaint();
-                   /* try {
-                        Thread.currentThread().sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }*/
-                }
-
+                this.point.setLocation(p);
+                Thread.currentThread().sleep(500);
                 //this.point = (Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3));
                 this.energie-=coutEnergie;
 

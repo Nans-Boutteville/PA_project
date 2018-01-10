@@ -3,7 +3,7 @@ package moteur;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
-public class IAsimple {
+public class IAsimple implements Runnable {
     private Robot robot;
     private Robot ennemi;
     private boolean tourfini = false;
@@ -23,7 +23,7 @@ public class IAsimple {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    public boolean jouerTour() throws InvocationTargetException, IllegalAccessException {
+    public boolean jouerTour() throws InvocationTargetException, IllegalAccessException, InterruptedException {
         while(robot.getEnergie() > 1){
             //ATTAQUE
             ArrayList<Object> attaques = robot.getAttaque();
@@ -52,5 +52,17 @@ public class IAsimple {
                 robot.seDeplacer(deplacement.get(rand), randDistanceX, randDistanceY);
             }
         } return tourfini = true;
+    }
+
+    public void run() {
+        try {
+            this.jouerTour();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

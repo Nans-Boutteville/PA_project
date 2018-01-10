@@ -15,19 +15,23 @@ import java.io.IOException;
 @Graphique
 public class Robot_affichage_plugins {
     private int taille=40;
+    private Color c;
 
-    @Dessiner(argumentVie = 3, argumentEnergie = 4)
-    public void dessiner(Graphics g,Point p, int life, int stamina){
-        //Robot_affichage_plugins
-
+    public Robot_affichage_plugins(){
         Random rand = new Random();
         float r = rand.nextFloat();
         float gr = rand.nextFloat();
         float b = rand.nextFloat();
-        Color c = g.getColor();
-        g.setColor(new Color(r,gr,b));
+         c =new Color(r,gr,b);
+    }
+
+    @Dessiner(argumentVie = 3, argumentEnergie = 4)
+    public void dessiner(Graphics g,Point p, int life, int stamina){
+        //Robot_affichage_plugins
+        Color base = g.getColor();
+        g.setColor(this.c);
         g.fillRect((int)p.getX()+taille/2,(int)p.getY()+taille/2,taille,taille);
-        g.setColor(c);
+        g.setColor(base);
 
        //Code de test en dessous à supprimer quand les autres plugins pourront être chargés
 
