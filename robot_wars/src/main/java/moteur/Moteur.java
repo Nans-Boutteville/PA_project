@@ -4,6 +4,7 @@ import plugins_basique.Robot_affichage_plugins;
 import plugins_basique.Robot_attaque_plugins;
 import plugins_basique.Robot_deplace_plugins;
 
+import javax.swing.*;
 import java.awt.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -11,55 +12,48 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 public class Moteur {
-    private ArrayList<Robot> robots;
+    private Robot r1;
+    private Robot r2d2;
     private ArrayList<Class> classGraphique;
     private ArrayList<Class> classAttaque;
     private ArrayList<Class> classDeplacement;
 
-    public Moteur(int nbRobot) throws InvocationTargetException, IllegalAccessException {
-        int x=10;
-        int y=10;
-        this.robots=new ArrayList<Robot>();
-        for(int i=0;i<nbRobot;i++){
-            Robot r = new Robot(new Point(x,y));
-            this.robots.add(r);
-            x= (int) (Math.random() * 800);
-            y= (int) (Math.random() * 800);
-        }
-
-        Vue v = new Vue(this.robots);
-        for(Robot robot: this.robots){
-            robot.setGraph(v.getPanel());
-        }
+    public Moteur() throws InvocationTargetException, IllegalAccessException {
+        r1=new Robot(new Point(10,10));
+        r2d2 = new Robot(new Point(300,10));
+        Vue v = new Vue(r1,r2d2);
+        r1.setGraph(v.getPanel());
+        r2d2.setGraph(v.getPanel());
         this.implementsPlugins();
     }
 
-    public ArrayList<Robot> getRobots() {
-        return this.robots;
+    public Robot getR1() {
+        return r1;
     }
 
+    public Robot getR2d2() {
+        return r2d2;
+    }
 
     /**
      * Les deux IA jouent tour par tour jusqu'à la mort d'une des deux
+     * @param player1
+     * @param player2
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      * @throws InterruptedException
      */
-    public void run(ArrayList<IAsimple> ias) throws InvocationTargetException, IllegalAccessException, InterruptedException {
-        boolean fin =false;
-        while (!fin) {
-            for(Robot r:robots){
-                r.reinitialiseEnergie();
-            }
-            for(IAsimple ia : ias){
-                if(ia.getVieRobot()>0){
-                    Thread p1 = new Thread(ia);
-                    p1.run();
-                    p1.join();
-                }else{
-                    fin=true;
-                    break;
-                }
+    public void run(IAsimple player1, IAsimple player2) throws InvocationTargetException, IllegalAccessException, InterruptedException {
+        while (r1.getVie() > 0 && r2d2.getVie() > 0) {
+            r1.reinitialiseEnergie();
+            r2d2.reinitialiseEnergie();
+            Thread p1 = new Thread(player1);
+            p1.run();
+            p1.join();
+            if (r2d2.getVie() > 0){
+                Thread p2 = new Thread(player2);
+                p2.run();
+                p2.join();
             }
         }
     }
@@ -73,41 +67,18 @@ public class Moteur {
     }
 
     private void implementsDefaultPlugins() throws InvocationTargetException, IllegalAccessException {
-        for(Robot r : robots){
-            Robot_affichage_plugins graph= new Robot_affichage_plugins();
-            Robot_attaque_plugins attaque= new Robot_attaque_plugins();
-            Robot_deplace_plugins deplace = new Robot_deplace_plugins();
-            r.addPLuginsGraphisme(graph);
-            r.addPLuginsAttaque(attaque);
-            r.addPlunginsDeplacement(deplace);
-        }
-    }
-
-    private void addGraphique(Class graphique) throws InvocationTargetException, IllegalAccessException {
-        for(Robot r : robots){
-            Object o = implementsClass(graphique,r);
-            if(o!=null){
-                r.addPLuginsGraphisme(o);
-            }
-        }
-    }
-
-    private void addAttaque(Class attaque){
-        for(Robot r : robots){
-            Object o = implementsClass(attaque,r);
-            if(o!=null){
-                r.addPLuginsAttaque(o);
-            }
-        }
-    }
-
-    private void addDeplacement(Class deplacement){
-        for(Robot r : robots){
-            Object o = implementsClass(deplacement,r);
-            if(o!=null){
-                r.addPlunginsDeplacement(o);
-            }
-        }
+        Robot_affichage_plugins graph1= new Robot_affichage_plugins();
+        Robot_attaque_plugins attaque1= new Robot_attaque_plugins();
+        Robot_deplace_plugins deplace1 = new Robot_deplace_plugins();
+        Robot_affichage_plugins graph2= new Robot_affichage_plugins();
+        Robot_attaque_plugins attaque2= new Robot_attaque_plugins();
+        Robot_deplace_plugins deplace2 = new Robot_deplace_plugins();
+        r1.addPLuginsGraphisme(graph1);
+        r2d2.addPLuginsGraphisme(graph2);
+        r1.addPLuginsAttaque(attaque1);
+        r2d2.addPLuginsAttaque(attaque2);
+        r1.addPlunginsDeplacement(deplace1);
+        r2d2.addPlunginsDeplacement(deplace2);
     }
 
     private void implementsOtherPlugins() throws InvocationTargetException, IllegalAccessException {
@@ -118,13 +89,28 @@ public class Moteur {
             this.addClassWithAnnotation(c);
         }
         for(Class graphique : this.classGraphique){
-            this.addGraphique(graphique);
+            Object o1 = implementsClass(graphique);
+            Object o2 = implementsClass(graphique);
+            if(o1!=null && o2!=null){
+                r1.addPLuginsGraphisme(o1);
+                r2d2.addPLuginsGraphisme(o2);
+            }
         }
         for(Class attaque : this.classAttaque){
-            this.addAttaque(attaque);
+            Object o1 = implementsClass(attaque);
+            Object o2 = implementsClass(attaque);
+            if(o1!=null && o2!=null){
+                r1.addPLuginsAttaque(o1);
+                r2d2.addPLuginsAttaque(o2);
+            }
         }
         for(Class deplacement : this.classDeplacement){
-            this.addDeplacement(deplacement);
+            Object o1 = implementsClass(deplacement);
+            Object o2 = implementsClass(deplacement);
+            if(o1!=null && o2!=null){
+                r1.addPlunginsDeplacement(o1);
+                r2d2.addPlunginsDeplacement(o2);
+            }
         }
 
     }
@@ -142,7 +128,7 @@ public class Moteur {
         }
     }
 
-    private Object implementsClass(Class c,Robot r){
+    private Object implementsClass(Class c){
         Object newObj = null;
         try {
             newObj =c.newInstance();
@@ -151,7 +137,7 @@ public class Moteur {
             for(Constructor construc : allCOnstrucotr){
                 if(construc.getParameterTypes().length==1){
                     Class parameter = construc.getParameterTypes()[0];
-                    Object implemnents = this.compareClassToObjectGraphique(parameter,r);
+                    Object implemnents = this.compareClassToObjectGraphique(parameter);
                     if(implemnents!=null){
                         try {
                             newObj=construc.newInstance(implemnents);
@@ -171,8 +157,8 @@ public class Moteur {
         return newObj;
     }
 
-    private Object compareClassToObjectGraphique(Class c,Robot r){
-        ArrayList<Object> allObjectGraphique = r.getGraphisme();
+    private Object compareClassToObjectGraphique(Class c){
+        ArrayList<Object> allObjectGraphique = r1.getGraphisme();
         Object returnCompare = null;
         for(Object o : allObjectGraphique){
             if(o.getClass().getName().equals(c.getName())){

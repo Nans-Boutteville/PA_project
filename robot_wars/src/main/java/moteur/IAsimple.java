@@ -30,6 +30,7 @@ public class IAsimple implements Runnable {
 
             for(Object o : attaques){
                 if(robot.peutAttaquer(o, ennemi)){
+                    System.out.println("ATTAQUE");
                     robot.attaque(o, ennemi);
                 }
             }
@@ -52,10 +53,6 @@ public class IAsimple implements Runnable {
                 robot.seDeplacer(deplacement.get(rand), randDistanceX, randDistanceY);
             }
         } return tourfini = true;
-    }
-
-    public int getVieRobot(){
-        return this.robot.getVie();
     }
 
     public void run() {
