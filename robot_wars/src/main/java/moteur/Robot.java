@@ -459,7 +459,7 @@ public class Robot {
                     y=40;
                 }
                 this.point.setLocation(new Point(x,y));
-                Thread.currentThread().sleep(10);
+                Thread.currentThread().sleep(5);
                 this.energie-=coutEnergie;
 
 
