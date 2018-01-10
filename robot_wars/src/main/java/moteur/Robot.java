@@ -30,6 +30,7 @@ public class Robot {
     }
 
     public Robot(Point point) {
+        System.out.println("TEST CREATION");
         this.point = point;
         this.vie = 100;
         this.energie = this.EENERGIEBASE;
@@ -289,7 +290,30 @@ public class Robot {
             for(int i=0;i<allMethods.length;i++){
 
                 if(allMethods[i].getParameterTypes().length==3){
-                    if(allMethods[i].getParameterTypes()[0].getName().equals("java.awt.Graphics") && allMethods[i].getReturnType().getName().equals("boolean")){
+                    Object arg1=null;
+                    Object arg2=null;
+                    Object arg3=null;
+                    for(Class c : allMethods[i].getParameterTypes()){
+                        if(c.getName().equals("java.awt.Graphics")){
+                            if(arg1==null){
+                                arg1=c;
+                            }else if(arg2==null){
+                                arg2=c;
+                            }else if(arg3==null){
+                                arg3=c;
+                            }
+                        }else if(c.getName().equals("java.awt.Point")){
+                            if(arg1==null){
+                                arg1=c;
+                            }else if(arg2==null){
+                                arg2=c;
+                            }else if(arg3==null){
+                                arg3=c;
+                            }
+                        }
+
+                    }
+                    if((arg1!=null && arg2!=null && arg3!=null)  && allMethods[i].getReturnType().getName().equals("boolean")){
                         boolean bienAttaque = invokeMethodsAttack(allMethods[i],plugins,this.graph.getGraphics(),r.getCoordonnee());
                         if(bienAttaque){
                             Attaque attaqueA = (Attaque)attaque.getAnnotation(Attaque.class);
@@ -305,14 +329,40 @@ public class Robot {
     public boolean peutAttaquer(Object plugins,Robot r) throws InvocationTargetException, IllegalAccessException {
         boolean returnAttack =false;
         if(this.attaque.contains(plugins) && plugins.getClass().getAnnotation(Attaque.class).perteEnergie()<=this.energie){
+
             Class attaque = plugins.getClass();
             Method[] allMethods = attaque.getMethods();
             for(int i=0;i<allMethods.length;i++){
 
 
                 if(allMethods[i].getParameterTypes().length==3){
-                    if(allMethods[i].getParameterTypes()[0].getName().equals("java.awt.Graphics") && allMethods[i].getReturnType().getName().equals("boolean")){
+                    Object arg1=null;
+                    Object arg2=null;
+                    Object arg3=null;
+                    for(Class c : allMethods[i].getParameterTypes()){
+                        if(c.getName().equals("java.awt.Graphics")){
+                            if(arg1==null){
+                                arg1=c;
+                            }else if(arg2==null){
+                                arg2=c;
+                            }else if(arg3==null){
+                                arg3=c;
+                            }
+                        }else if(c.getName().equals("java.awt.Point")){
+                            if(arg1==null){
+                                arg1=c;
+                            }else if(arg2==null){
+                                arg2=c;
+                            }else if(arg3==null){
+                                arg3=c;
+                            }
+                        }
+
+                    }
+
+                    if((arg1!=null && arg2!=null && arg3!=null) && allMethods[i].getReturnType().getName().equals("boolean")){
                          returnAttack = invokeMethodsAttack(allMethods[i],plugins,this.graph.getGraphics(),r.getCoordonnee());
+
                     }
                 }
             }
@@ -322,6 +372,9 @@ public class Robot {
 
     public void degats (int perteVie) throws InvocationTargetException, IllegalAccessException {
         this.vie-=perteVie;
+        if(vie<0){
+            vie=0;
+        }
         this.graph.repaint();
     }
 
@@ -407,7 +460,7 @@ public class Robot {
                     y=40;
                 }
                 this.point.setLocation(new Point(x,y));
-                Thread.currentThread().sleep(10);
+                Thread.currentThread().sleep(50);
                 this.energie-=coutEnergie;
 
 

@@ -30,6 +30,7 @@ public class IAsimple implements Runnable {
 
             for(Object o : attaques){
                 if(robot.peutAttaquer(o, ennemi)){
+                    System.out.println("ATTAQUE");
                     robot.attaque(o, ennemi);
                 }
             }
@@ -37,13 +38,13 @@ public class IAsimple implements Runnable {
             //DEPLACEMENT
             ArrayList<Object> deplacement = robot.getDeplacement();
 
-            System.out.println(robot.getEnergie());
+            //System.out.println(robot.getEnergie());
 
             int randDistanceX = (int) (Math.random() * robot.getEnergie());
             int randDistanceY = (int) (Math.random() * robot.getEnergie());
 
-            System.out.println("X = " + randDistanceX);
-            System.out.println("Y = " + randDistanceY);
+            //System.out.println("X = " + randDistanceX);
+            //System.out.println("Y = " + randDistanceY);
 
             if(deplacement.size() == 1 ){
                 robot.seDeplacer(deplacement.get(0), randDistanceX, randDistanceY);
