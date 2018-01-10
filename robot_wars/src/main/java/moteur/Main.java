@@ -22,7 +22,6 @@ public class Main {
         ArrayList<Robot> robotsEnnemis = main.getRobotsEnnemis();
         for(int i=0;i<allRobots.size();i++){
             robotsEnnemis.remove(allRobots.get(i));
-            System.out.println(i+" "+robotsEnnemis.size());
             players.add(new IAsimple(allRobots.get(i),robotsEnnemis));
             main.reinitialiseRobotsEnnemis();
         }

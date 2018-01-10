@@ -10,7 +10,10 @@ public class IAsimple implements Runnable {
 
     public IAsimple(Robot robot, ArrayList<Robot> ennemis) {
         this.robot = robot;
-        this.ennemis = ennemis;
+        this.ennemis=new ArrayList<Robot>();
+        for(Robot r : ennemis){
+            this.ennemis.add(r);
+        }
     }
 
     /**
