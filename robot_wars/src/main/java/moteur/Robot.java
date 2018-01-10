@@ -393,7 +393,7 @@ public class Robot {
             if(coutEnergie>-1 && args.size()==4){
                 Point p = (Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3));
                 this.point.setLocation(p);
-                Thread.currentThread().sleep(500);
+                Thread.currentThread().sleep(10);
                 //this.point = (Point)this.invoke(methodDeplacement,o,args.get(0),args.get(1),args.get(2),args.get(3));
                 this.energie-=coutEnergie;
 

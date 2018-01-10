@@ -5,6 +5,7 @@ import annotation.Deplacement;
 import annotation.Deplacer;
 
 import java.awt.*;
+import java.util.Random;
 
 @Deplacement
 public class Robot_deplace_plugins {
@@ -12,11 +13,12 @@ public class Robot_deplace_plugins {
     @Deplacer
     public Point deplacer(Graphics g,Point depart,int deplacementX,int deplacementY){
         Point retour;
-        int x =(int) (Math.random() * (deplacementX));
-        int y = ((int)Math.random() * (deplacementY));
+        int x =deplacementX;
+        int y = deplacementY;
 
-        int alea = (int)Math.random();
-        if(alea==0){
+        Random random = new Random();
+        boolean alea= random.nextBoolean();
+        if(alea){
             retour=new Point((int)depart.getX()+x,(int)depart.getY()+y);
         }else{
             retour= new Point((int)depart.getX()-x,(int)depart.getY()-y);
@@ -26,6 +28,10 @@ public class Robot_deplace_plugins {
 
     @CalculDeplacement
     public int calculEnergie(int deplacementX,int deplacementY){
-        return deplacementX+deplacementY;
+        int retourEnergie=deplacementX;
+        if(deplacementY<deplacementX){
+            retourEnergie=deplacementY;
+        }
+        return retourEnergie;
     }
 }
