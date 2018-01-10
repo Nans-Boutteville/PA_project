@@ -41,5 +41,11 @@ public class Robot_attaque_plugins {
         } catch (IOException e) {
             System.out.println("n'affiche pas l'attaque");
         }
+
+        try {
+            Thread.currentThread().sleep(5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
