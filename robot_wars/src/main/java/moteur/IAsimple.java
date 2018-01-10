@@ -5,12 +5,12 @@ import java.util.ArrayList;
 
 public class IAsimple implements Runnable {
     private Robot robot;
-    private Robot ennemi;
+    private ArrayList<Robot> ennemis;
     private boolean tourfini = false;
 
-    public IAsimple(Robot robot, Robot ennemi) {
+    public IAsimple(Robot robot, ArrayList<Robot> ennemis) {
         this.robot = robot;
-        this.ennemi = ennemi;
+        this.ennemis = ennemis;
     }
 
     /**
@@ -29,8 +29,10 @@ public class IAsimple implements Runnable {
             ArrayList<Object> attaques = robot.getAttaque();
 
             for(Object o : attaques){
-                if(robot.peutAttaquer(o, ennemi)){
-                    robot.attaque(o, ennemi);
+                for(Robot ennemi: this.ennemis){
+                    if(robot.peutAttaquer(o, ennemi)){
+                        robot.attaque(o, ennemi);
+                    }
                 }
             }
 

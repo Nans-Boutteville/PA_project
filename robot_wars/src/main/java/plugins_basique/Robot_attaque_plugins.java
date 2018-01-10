@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @Attaque(perteEnergie = 10, perteVie = 5)
 public class Robot_attaque_plugins {
-    private int portee = 100;
+    private int portee = 20;
 
     public boolean attaque(Point p1, Point p2, Graphics g) {
         boolean returnF = false;
