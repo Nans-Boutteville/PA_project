@@ -16,15 +16,9 @@ public class VuePanel extends JPanel {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        try {
             for(Robot robot : this.robots){
                 robot.seDessiner(g);
             }
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
     }
 
 }

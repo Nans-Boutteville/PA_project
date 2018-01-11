@@ -223,7 +223,7 @@ public class Robot {
                         if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
                             this.invoke(m,o,this.point,g,arg1,arg2);
                         } else {
-                            this.invoke(m,o,this.point,g,arg1,arg2);
+                            this.invoke(m,o,g,this.point,arg1,arg2);
                         }
                         break;
                 }
