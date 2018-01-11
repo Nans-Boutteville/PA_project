@@ -29,6 +29,7 @@ public class IAsimple implements Runnable {
      * @return true, signifiant que le tour de l'IA est fini
      * @throws InvocationTargetException
      * @throws IllegalAccessException
+     * @throws InterruptedException
      */
     public boolean jouerTour() throws InvocationTargetException, IllegalAccessException, InterruptedException {
         while(robot.getEnergie() > 1){
