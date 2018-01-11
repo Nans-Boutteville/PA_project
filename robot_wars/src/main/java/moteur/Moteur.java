@@ -16,7 +16,12 @@ public class Moteur {
     private ArrayList<Class> classAttaque;
     private ArrayList<Class> classDeplacement;
 
-    public Moteur(int nbRobot) throws InvocationTargetException, IllegalAccessException {
+
+    /**
+     * Constructor
+     * @param nbRobot nombre de robot à créer
+     */
+    public Moteur(int nbRobot){
         int x=10;
         int y=10;
         this.robots=new ArrayList<Robot>();
@@ -77,7 +82,7 @@ public class Moteur {
         }
     }
 
-    private void implementsPlugins() throws InvocationTargetException, IllegalAccessException {
+    private void implementsPlugins() {
         this.implementsDefaultPlugins();
         this.classGraphique=new ArrayList<Class>();
         this.classAttaque=new ArrayList<Class>();
@@ -85,7 +90,7 @@ public class Moteur {
         this.implementsOtherPlugins();
     }
 
-    private void implementsDefaultPlugins() throws InvocationTargetException, IllegalAccessException {
+    private void implementsDefaultPlugins(){
         for(Robot r : robots){
             Robot_affichage_plugins graph= new Robot_affichage_plugins();
             Robot_attaque_plugins attaque= new Robot_attaque_plugins();
@@ -96,7 +101,7 @@ public class Moteur {
         }
     }
 
-    private void addGraphique(Class graphique) throws InvocationTargetException, IllegalAccessException {
+    private void addGraphique(Class graphique)  {
         for(Robot r : robots){
             Object o = implementsClass(graphique,r);
             if(o!=null){
@@ -123,7 +128,7 @@ public class Moteur {
         }
     }
 
-    private void implementsOtherPlugins() throws InvocationTargetException, IllegalAccessException {
+    private void implementsOtherPlugins(){
         //appel au classLoader qui retourne ArrayList<Class>
         //changer le allPlugins (new) par le retour du classLoader
         ArrayList<Class> allPlugins = new ArrayList<Class>(); // return classloader

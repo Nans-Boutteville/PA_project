@@ -54,7 +54,7 @@ public class Robot {
         return graphisme;
     }
 
-    public void addPLuginsGraphisme(Object graph) throws InvocationTargetException, IllegalAccessException {
+    public void addPLuginsGraphisme(Object graph){
         graphisme.add(graph);
         this.graph.repaint();
     }
@@ -75,14 +75,14 @@ public class Robot {
         return this.energie;
     }
 
-    public void reinitialiseEnergie() throws InvocationTargetException, IllegalAccessException {
+    public void reinitialiseEnergie(){
         this.energie = this.EENERGIEBASE;
         this.graph.repaint();
     }
 
     //Les différentes actions disponibles
 
-    public void seDessiner(Graphics g) throws InvocationTargetException, IllegalAccessException {
+    public void seDessiner(Graphics g){
         for (int i = 0; i < this.graphisme.size(); i++) {
             ArrayList<Method> allMethodsDessin = this.getMethodDessin(this.graphisme.get(i).getClass().getMethods());
             for (int j = 0; j < allMethodsDessin.size(); j++) {
@@ -92,7 +92,7 @@ public class Robot {
         }
     }
 
-    private void dessiner(Method m, Object o, Graphics g) throws InvocationTargetException, IllegalAccessException {
+    private void dessiner(Method m, Object o, Graphics g){
         if (m.getAnnotation(Dessiner.class) != null) {
             Dessiner dess = (Dessiner) m.getAnnotation(Dessiner.class);
             if (!dess.animationAttaque() && !dess.animationMouvement()) {
@@ -117,7 +117,7 @@ public class Robot {
         }
     }
 
-    private void invoke(Method m, Object o, Point p, Graphics g) throws InvocationTargetException, IllegalAccessException {
+    private void invoke(Method m, Object o, Point p, Graphics g){
         if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
             this.invoke(m, o, (Object) this.point, (Object) g);
         } else {
@@ -125,7 +125,7 @@ public class Robot {
         }
     }
 
-    private void switchInvoke(Method m, Object o, Graphics g, int switchElement, Object arg) throws InvocationTargetException, IllegalAccessException {
+    private void switchInvoke(Method m, Object o, Graphics g, int switchElement, Object arg){
         switch (switchElement) {
             case 1:
                 if (m.getParameterTypes()[1].getName().equals("java.awt.Point")) {
@@ -143,37 +143,37 @@ public class Robot {
                 break;
             default:
                 if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                    m.invoke(o, this.point, g, arg);
+                    this.invoke(m,o,this.point,g,arg);
                 } else {
-                    m.invoke(o, g, this.point,arg);
+                    this.invoke(m,g,this.point,arg);
                 }
                 break;
         }
     }
 
-    private void switchInvoke(Method m, Object o, Graphics g, int switchElement1, Object arg1, int switchElement2, Object arg2) throws InvocationTargetException, IllegalAccessException {
+    private void switchInvoke(Method m, Object o, Graphics g, int switchElement1, Object arg1, int switchElement2, Object arg2){
         switch (switchElement1) {
             case 1:
                 switch (switchElement2) {
                     case 2:
                         if (m.getParameterTypes()[2].getName().equals("java.awt.Point")) {
-                            m.invoke(o, arg1, arg2, this.point, g);
+                            this.invoke(m,o,arg1,arg2,this.point,g);
                         } else {
-                            m.invoke(o, arg1, arg2, g, this.point);
+                            this.invoke(m,o,arg1,arg2,g,this.point);
                         }
                         break;
                     case 3:
                         if (m.getParameterTypes()[1].getName().equals("java.awt.Point")) {
-                            m.invoke(o, arg1, this.point, arg2, g);
+                            this.invoke(m,o,arg1,this.point,arg2,g);
                         } else {
-                            m.invoke(o, arg1, g, arg2, this.point);
+                            this.invoke(m,o,arg1,g,arg2,this.point);
                         }
                         break;
                     default:
                         if (m.getParameterTypes()[1].getName().equals("java.awt.Point")) {
-                            m.invoke(o, arg1, this.point, g, arg2);
+                            this.invoke(m,o,arg1,this.point,g,arg2);
                         } else {
-                            m.invoke(o, arg1, g, this.point, arg2);
+                            this.invoke(m,o,arg1,g,this.point,arg2);
                         }
                         break;
                 }
@@ -182,23 +182,23 @@ public class Robot {
                 switch (switchElement2) {
                     case 1:
                         if (m.getParameterTypes()[2].getName().equals("java.awt.Point")) {
-                            m.invoke(o, arg2, arg1, this.point, g);
+                            this.invoke(m,o,arg2,arg1,this.point,g);
                         } else {
-                            m.invoke(o, arg2, arg1, g, this.point);
+                            this.invoke(m,o,arg2,arg1,g,this.point);
                         }
                         break;
                     case 3:
                         if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                            m.invoke(o, this.point, arg1, arg2, g);
+                            this.invoke(m,o,this.point,arg1,arg2,g);
                         } else {
-                            m.invoke(o, g, arg1, arg2, this.point);
+                            this.invoke(m,o,g,arg1,arg2,this.point);
                         }
                         break;
                     default:
                         if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                            m.invoke(o, this.point, arg1, g, arg2);
+                            this.invoke(m,o,this.point,arg1,g,arg2);
                         } else {
-                            m.invoke(o, g, arg1, this.point, arg2);
+                            this.invoke(m,o,g,arg1,this.point,arg2);
                         }
                         break;
                 }
@@ -207,23 +207,23 @@ public class Robot {
                 switch (switchElement2) {
                     case 1:
                         if (m.getParameterTypes()[1].getName().equals("java.awt.Point")) {
-                            m.invoke(o, arg2, this.point, arg1, g);
+                            this.invoke(m,o,arg2,this.point,arg1,g);
                         } else {
-                            m.invoke(o, arg2, g, arg1, this.point);
+                            this.invoke(m,o,arg2,g,arg1,this.point);
                         }
                         break;
                     case 2:
                         if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                            m.invoke(o, this.point, arg2, arg1, g);
+                            this.invoke(m,o,this.point,arg2,arg1,g);
                         } else {
-                            m.invoke(o, g, arg2, arg1, this.point);
+                            this.invoke(m,o,arg2,arg1,this.point);
                         }
                         break;
                     default:
                         if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                            m.invoke(o, this.point, g, arg1, arg2);
+                            this.invoke(m,o,this.point,g,arg1,arg2);
                         } else {
-                            m.invoke(o, g, this.point, arg1, arg2);
+                            this.invoke(m,o,this.point,g,arg1,arg2);
                         }
                         break;
                 }
@@ -232,23 +232,23 @@ public class Robot {
                 switch (switchElement2) {
                     case 1:
                         if (m.getParameterTypes()[1].getName().equals("java.awt.Point")) {
-                            m.invoke(o, arg2, this.point, g, arg1);
+                            this.invoke(m,o,arg2,this.point,g,arg1);
                         } else {
-                            m.invoke(o, arg2, g, this.point, arg1);
+                            this.invoke(m,o,arg2,g,this.point,arg1);
                         }
                         break;
                     case 2:
                         if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                            m.invoke(o, this.point, arg2, g, arg1);
+                            this.invoke(m,o,this.point,arg2,g,arg1);
                         } else {
-                            m.invoke(o, g, arg2, this.point, arg1);
+                            this.invoke(m,o,arg2,this.point,arg1);
                         }
                         break;
                     default:
                         if (m.getParameterTypes()[0].getName().equals("java.awt.Point")) {
-                            m.invoke(o, this.point, g, arg2, arg1);
+                            this.invoke(m,o,this.point,g,arg2,arg1);
                         } else {
-                            m.invoke(o, g, this.point, arg2, arg1);
+                            this.invoke(m,o,g,this.point,arg2,arg1);
                         }
                         break;
                 }
@@ -256,8 +256,16 @@ public class Robot {
         }
     }
 
-    private Object invoke(Method m, Object o, Object... args) throws InvocationTargetException, IllegalAccessException {
-        return m.invoke( o, args);
+    private Object invoke(Method m, Object o, Object... args){
+        Object r = null;
+        try {
+            r= m.invoke( o, args);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return r;
     }
 
     private ArrayList<Method> getMethodDessin(Method[] allMethods) {
@@ -282,7 +290,7 @@ public class Robot {
 
 
 
-    public void attaque(Object plugins, Robot r) throws InvocationTargetException, IllegalAccessException {
+    public void attaque(Object plugins, Robot r){
         if(this.attaque.contains(plugins)){
             Class attaque = plugins.getClass();
             Method[] allMethods = attaque.getMethods();
@@ -325,7 +333,7 @@ public class Robot {
         }
     }
 
-    public boolean peutAttaquer(Object plugins,Robot r) throws InvocationTargetException, IllegalAccessException {
+    public boolean peutAttaquer(Object plugins,Robot r){
         boolean returnAttack =false;
         if(this.attaque.contains(plugins) && plugins.getClass().getAnnotation(Attaque.class).perteEnergie()<=this.energie){
 
@@ -369,7 +377,7 @@ public class Robot {
         return returnAttack;
     }
 
-    public void degats (int perteVie) throws InvocationTargetException, IllegalAccessException {
+    public void degats (int perteVie) {
         this.vie-=perteVie;
         if(vie<0){
             vie=0;
@@ -377,7 +385,7 @@ public class Robot {
         this.graph.repaint();
     }
 
-    private boolean invokeMethodsAttack(Method m,Object o, Graphics g, Point p) throws InvocationTargetException, IllegalAccessException {
+    private boolean invokeMethodsAttack(Method m,Object o, Graphics g, Point p) {
         boolean returnA= false;
         int idArgGraphics=-1,idArgPointp1=-1,idArgPointp2=-1;
         Class[] allArgument = m.getParameterTypes();
@@ -415,14 +423,14 @@ public class Robot {
         return returnA;
     }
 
-    public void seDeplacer(Object plugins,int deplacementX,int deplacementY) throws InvocationTargetException, IllegalAccessException, InterruptedException {
+    public void seDeplacer(Object plugins,int deplacementX,int deplacementY) {
         if(this.deplacement.contains(plugins)){
             Class deplacemen = plugins.getClass();
             this.invokeMethodDeplacement(deplacemen.getMethods(),plugins,deplacementX,deplacementY);
         }
     }
 
-    private void invokeMethodDeplacement(Method[] methods,Object o,int deplacementX,int deplacementY) throws InvocationTargetException, IllegalAccessException, InterruptedException {
+    private void invokeMethodDeplacement(Method[] methods,Object o,int deplacementX,int deplacementY){
         Method methodDeplacement=null;
         for(Method method:methods){
             if(method.getAnnotation(Deplacer.class)!=null && method.getReturnType().getName().equals("java.awt.Point")){
@@ -459,7 +467,11 @@ public class Robot {
                     y=40;
                 }
                 this.point.setLocation(new Point(x,y));
-                Thread.currentThread().sleep(5);
+                try {
+                    Thread.currentThread().sleep(5);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 this.energie-=coutEnergie;
 
 
@@ -469,7 +481,7 @@ public class Robot {
 
     }
 
-    public Point CalculPointDeplacement(Method[] methods,Object o,int deplacementX, int deplacementY) throws InvocationTargetException, IllegalAccessException {
+    public Point CalculPointDeplacement(Method[] methods,Object o,int deplacementX, int deplacementY) {
         Method methodDeplacement=null;
         for(Method method:methods){
             if(method.getAnnotation(Deplacer.class)!=null && method.getReturnType().getName().equals("java.awt.Point")){
@@ -524,7 +536,7 @@ public class Robot {
         return args;
     }
 
-    public int coutEnergieDeplacement(Object plugins,int deplacementX, int deplacementY) throws InvocationTargetException, IllegalAccessException {
+    public int coutEnergieDeplacement(Object plugins,int deplacementX, int deplacementY){
         if(this.deplacement.contains(plugins)){
             Class deplacemen = plugins.getClass();
             return this.invokeMethodDeplacementCoutEnergie(deplacemen.getMethods(),plugins,deplacementX,deplacementY);
@@ -533,7 +545,7 @@ public class Robot {
         return -1;
     }
 
-    private int invokeMethodDeplacementCoutEnergie(Method[] methods,Object o,int deplacementX,int deplacementY) throws InvocationTargetException, IllegalAccessException {
+    private int invokeMethodDeplacementCoutEnergie(Method[] methods,Object o,int deplacementX,int deplacementY){
         Method methodDeplacement=null;
         for(Method method:methods){
             if(method.getAnnotation(CalculDeplacement.class)!=null && method.getReturnType().getName().equals("int")){
