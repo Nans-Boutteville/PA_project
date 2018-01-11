@@ -39,41 +39,82 @@ public class Moteur {
         this.implementsPlugins();
     }
 
+    /**
+     * Récupéré tous les robots disponible
+     * @return tous les robots disponible
+     */
     public ArrayList<Robot> getRobots() {
         return this.robots;
     }
 
-
     /**
-     * Les deux IA jouent tour par tour jusqu'à la mort d'une des deux
-     * @throws InvocationTargetException
-     * @throws IllegalAccessException
-     * @throws InterruptedException
+     * Les IA jouent tour par tour jsuqu'à qu'il reste un survivant
+     * @param ias Tableau contenant toutes les IA
      */
-    public void run(ArrayList<IAsimple> ias) throws InvocationTargetException, IllegalAccessException, InterruptedException {
+    public void run(ArrayList<IAsimple> ias) {
         boolean fin =false;
         ArrayList<Robot> rob = (ArrayList<Robot>) this.getRobots().clone();
         while (!fin) {
-            for(Robot r:robots){
-                r.reinitialiseEnergie();
-            }
-            for(IAsimple ia : ias){
-                if(ia.getVieRobot()>0){
-                    Thread p1 = new Thread(ia);
-                    p1.run();
-                    p1.join();
-                }else{
-                    rob.remove(ia.getRobot());
-                    this.removeEnnemi(ias, ia);
-                    if(rob.size() == 1){
-                        fin=true;
-                        break;
-                    }
-                }
-            }
+            reinitialiseEnergieAllRobots();
+            fin = this.playAllIA(ias,rob);
         }
     }
 
+    /**
+     * Fait jouer tous les IA et renvois à la fin si il ne reste qu'un robot vivant ou non
+     * @param ias tableau contenant tous les IA disponible
+     * @param allPlayRobots tableau contant tous les robots qui sont encore vivant
+     * @return true si il ne reste qu'un robot vivant
+     */
+    private boolean playAllIA(ArrayList<IAsimple> ias,ArrayList<Robot> allPlayRobots){
+        boolean fin =false;
+            for(IAsimple ia : ias){
+                fin = playIA(ia,allPlayRobots,ias);
+            }
+        return fin;
+    }
+
+    /**
+     * Fait jouer un IA et retourne si il ne reste qu'un robot vivant
+     * @param ia IA qui doit jouer
+     * @param allPlayRobots tableau contenant tous les robots qui sont encore vivant
+     * @param ias tableau contenat tous les IA disponible
+     * @return true si il ne reste qu'un robot vivant
+     */
+    private boolean playIA(IAsimple ia, ArrayList<Robot> allPlayRobots,ArrayList<IAsimple> ias){
+        boolean fin = false;
+        try {
+            if(ia.getVieRobot()>0){
+                Thread p1 = new Thread(ia);
+                p1.run();
+                p1.join();
+            }else{
+                allPlayRobots.remove(ia.getRobot());
+                this.removeEnnemi(ias, ia);
+                if(allPlayRobots.size() == 1){
+                    fin=true;
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return fin;
+    }
+
+    /**
+     * Reinitialise l'énergie de tout les robots
+     */
+    private void reinitialiseEnergieAllRobots(){
+        for(Robot r:robots){
+            r.reinitialiseEnergie();
+        }
+    }
+
+    /**
+     * enleve un ennemi mort dans toutes les autres IA pour plus qu'il n'attaque celui-ci
+     * @param arrayIA tableau contenant tous les IA disponible
+     * @param ia IA dont l'ennemi est mort
+     */
     private void removeEnnemi (ArrayList<IAsimple> arrayIA,IAsimple ia){
         for(IAsimple iasimple : arrayIA){
             if (!iasimple.equals(ia)){
@@ -82,6 +123,9 @@ public class Moteur {
         }
     }
 
+    /**
+     * implemente tous les plugins dans les robots
+     */
     private void implementsPlugins() {
         this.implementsDefaultPlugins();
         this.classGraphique=new ArrayList<Class>();
@@ -90,6 +134,9 @@ public class Moteur {
         this.implementsOtherPlugins();
     }
 
+    /**
+     * implemente tous les plugins par défault dans les robots
+     */
     private void implementsDefaultPlugins(){
         for(Robot r : robots){
             Robot_affichage_plugins graph= new Robot_affichage_plugins();
@@ -101,6 +148,10 @@ public class Moteur {
         }
     }
 
+    /**
+     * add un plugins graphique a tous les robots
+     * @param graphique plugins graphique
+     */
     private void addGraphique(Class graphique)  {
         for(Robot r : robots){
             Object o = implementsClass(graphique,r);
@@ -110,6 +161,10 @@ public class Moteur {
         }
     }
 
+    /**
+     * add un plugins attaque a tous les robots
+     * @param attaque plugins attaque
+     */
     private void addAttaque(Class attaque){
         for(Robot r : robots){
             Object o = implementsClass(attaque,r);
@@ -119,6 +174,10 @@ public class Moteur {
         }
     }
 
+    /**
+     * add un plugins deplacement a tous les robots
+     * @param deplacement plugins deplacement
+     */
     private void addDeplacement(Class deplacement){
         for(Robot r : robots){
             Object o = implementsClass(deplacement,r);
@@ -128,6 +187,9 @@ public class Moteur {
         }
     }
 
+    /**
+     * Implmente tous les plugins se trouvant dans un dossier distant
+     */
     private void implementsOtherPlugins(){
         //appel au classLoader qui retourne ArrayList<Class>
         //changer le allPlugins (new) par le retour du classLoader
@@ -147,6 +209,10 @@ public class Moteur {
 
     }
 
+    /**
+     * Implement une class qui possède une anotation
+     * @param c class qui possède peut-être une annotation
+     */
     private void addClassWithAnnotation(Class c){
         Annotation[] allAnnotations = c.getAnnotations();
         for(Annotation a : allAnnotations) {
@@ -160,35 +226,60 @@ public class Moteur {
         }
     }
 
+    /**
+     * Implemente une class avec son constructeur
+     * @param c la class a implémenter
+     * @param r le robot qui possède les information qui peuvent aider à implémenter l'objet
+     * @return l'objet qui correpond à l'implémentation de la class demandé
+     */
     private Object implementsClass(Class c,Robot r){
         Object newObj = null;
         try {
             newObj =c.newInstance();
         } catch (InstantiationException e) {
-            Constructor[] allCOnstrucotr = c.getConstructors();
-            for(Constructor construc : allCOnstrucotr){
-                if(construc.getParameterTypes().length==1){
-                    Class parameter = construc.getParameterTypes()[0];
-                    Object implemnents = this.compareClassToObjectGraphique(parameter,r);
-                    if(implemnents!=null){
-                        try {
-                            newObj=construc.newInstance(implemnents);
-                        } catch (InstantiationException e1) {
-                            e1.printStackTrace();
-                        } catch (IllegalAccessException e1) {
-                            e1.printStackTrace();
-                        } catch (InvocationTargetException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                }
-            }
+            newObj=this.implementsClassWithOtherClass(c,r);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
         return newObj;
     }
 
+    /**
+     * Implemente une CLass qui a besoin d'une autre Class en argument
+     * @param c Class qui a besoin d'une autre Class en argument
+     * @param r Robot qui possèdent toutes les Class qui peuvent permettre d'instancier l'Objet
+     * @return l'objet construit si il y'a eu une erreur renvois null
+     */
+    private Object implementsClassWithOtherClass(Class c,Robot r){
+        Object newObj=null;
+        Constructor[] allCOnstrucotr = c.getConstructors();
+        for(Constructor construc : allCOnstrucotr){
+            if(construc.getParameterTypes().length==1){
+                Class parameter = construc.getParameterTypes()[0];
+                Object implemnents = this.compareClassToObjectGraphique(parameter,r);
+                if(implemnents!=null){
+                    try {
+                        newObj=construc.newInstance(implemnents);
+                        break;
+                    } catch (InstantiationException e1) {
+                        e1.printStackTrace();
+                    } catch (IllegalAccessException e1) {
+                        e1.printStackTrace();
+                    } catch (InvocationTargetException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }
+        return newObj;
+    }
+
+    /**
+     * Compare une class à tous les objets graphiques d'un robot pour l'implémenter
+     * @param c Class a comparé
+     * @param r le robot qui possède tous les objets graphiques
+     * @return
+     */
     private Object compareClassToObjectGraphique(Class c,Robot r){
         ArrayList<Object> allObjectGraphique = r.getGraphisme();
         Object returnCompare = null;
