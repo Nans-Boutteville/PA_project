@@ -22,7 +22,7 @@ public class Moteur {
      * Constructor
      * @param nbRobot nombre de robot à créer
      */
-    public Moteur(int nbRobot){
+    public Moteur(int nbRobot) throws ClassNotFoundException {
         int x=10;
         int y=10;
         this.robots=new ArrayList<Robot>();
@@ -127,7 +127,7 @@ public class Moteur {
     /**
      * implemente tous les plugins dans les robots
      */
-    private void implementsPlugins() {
+    private void implementsPlugins() throws ClassNotFoundException {
         this.implementsDefaultPlugins();
         this.classGraphique=new ArrayList<Class>();
         this.classAttaque=new ArrayList<Class>();
@@ -191,11 +191,12 @@ public class Moteur {
     /**
      * Implmente tous les plugins se trouvant dans un dossier distant
      */
-    private void implementsOtherPlugins(){
+    private void implementsOtherPlugins() throws ClassNotFoundException {
         //appel au classLoader qui retourne ArrayList<Class>
-        MyClassLoader Loader = new MyClassLoader();
-        ArrayList<Class> allPlugins =Loader.loadingJar();
-        System.out.println("nbAutrePlugins : "+allPlugins.size());
+        //MyClassLoader Loader = new MyClassLoader();
+        //ArrayList<Class> allPlugins =Loader.loadingJar();
+        ArrayList<Class> allPlugins = new ArrayList<Class>();
+        /*System.out.println("nbAutrePlugins : "+allPlugins.size());
         for(Class c:allPlugins){
             this.addClassWithAnnotation(c);
         }
@@ -207,7 +208,7 @@ public class Moteur {
         }
         for(Class deplacement : this.classDeplacement){
             this.addDeplacement(deplacement);
-        }
+        }*/
 
     }
 

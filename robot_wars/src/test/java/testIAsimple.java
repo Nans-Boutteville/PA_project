@@ -20,7 +20,7 @@ public class TestIAsimple {
      * @throws IllegalAccessException
      */
     @Before
-    public void environnement() throws InvocationTargetException, IllegalAccessException {
+    public void environnement() throws InvocationTargetException, IllegalAccessException, ClassNotFoundException {
         Moteur testMoteur = new Moteur(2);
         ArrayList<Robot> testEnnemis = new ArrayList<Robot>();
         ArrayList<Robot> robots = (ArrayList<Robot>) testMoteur.getRobots().clone();
