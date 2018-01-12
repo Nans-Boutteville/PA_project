@@ -14,6 +14,11 @@ public class TestIAsimple {
 
     private IAsimple testIA;
 
+    /**
+     * Mise en place d'un environnement de test pour la classe IAsimple
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     @Before
     public void environnement() throws InvocationTargetException, IllegalAccessException {
         Moteur testMoteur = new Moteur(2);
