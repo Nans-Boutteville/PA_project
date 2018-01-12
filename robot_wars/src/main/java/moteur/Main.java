@@ -14,7 +14,7 @@ public class Main {
         this.reinitialiseRobotsEnnemis();
     }
 
-	public static void main(String[] args) throws InvocationTargetException, IllegalAccessException, InterruptedException {
+	public static void main(String[] args) throws InvocationTargetException, IllegalAccessException, InterruptedException, ClassNotFoundException {
         Moteur m = new Moteur(3);
         ArrayList<Robot> allRobots=m.getRobots();
         ArrayList<IAsimple> players = new ArrayList<IAsimple>();

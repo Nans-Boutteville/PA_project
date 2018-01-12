@@ -33,7 +33,7 @@ public class MyClassLoader extends SecureClassLoader {
         }
         Enumeration<JarEntry> e =jarFile.entries();
 
-        URL[] urls = new URL[1];
+        URL[] urls = new URL[10];
         try {
             urls[0]= new URL(" file:///"+file.getPath());
         } catch (MalformedURLException e1) {
