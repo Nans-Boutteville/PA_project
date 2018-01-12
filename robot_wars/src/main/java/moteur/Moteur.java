@@ -34,7 +34,7 @@ public class Moteur {
 
         Vue v = new Vue(this.robots);
         for(Robot robot: this.robots){
-            robot.setGraph(v.getPanel());
+            robot.setPanel(v.getPanel());
         }
         this.implementsPlugins();
     }

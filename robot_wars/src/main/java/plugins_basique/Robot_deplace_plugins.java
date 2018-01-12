@@ -34,6 +34,7 @@ public class Robot_deplace_plugins {
             }
 
         }
+
        return retour;
     }
 
