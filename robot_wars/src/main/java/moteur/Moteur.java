@@ -193,10 +193,9 @@ public class Moteur {
      */
     private void implementsOtherPlugins(){
         //appel au classLoader qui retourne ArrayList<Class>
-        //changer le allPlugins (new) par le retour du classLoader
-        ArrayList<Class> allPlugins = new ArrayList<Class>(); // return classloader
-        MyClassLoader Loader = new MyClassLoader(allPlugins);
-        Loader.loadJar();
+        MyClassLoader Loader = new MyClassLoader();
+        ArrayList<Class> allPlugins =Loader.loadingJar();
+        System.out.println("nbAutrePlugins : "+allPlugins.size());
         for(Class c:allPlugins){
             this.addClassWithAnnotation(c);
         }

@@ -21,16 +21,10 @@ import java.util.zip.ZipFile;
 public class MyClassLoader extends SecureClassLoader {
 
     private ArrayList<File> path;
-    private ArrayList<Class> listClass;
-
-    public MyClassLoader(ArrayList<Class> lc) {
-        this.listClass=lc;
-    }
 
     public ArrayList<Class> loadingJar() {
-        ArrayList<Class> listclass= new ArrayList<>();
-        File file = new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + "plugins_basique" + File.separator + "plugins.jar");
-
+        ArrayList<Class> listclass= new ArrayList<Class>();
+        File file = new File("./" + File.separator + "src" + File.separator + "main" + File.separator + "java" + File.separator + "plugins_basique" + File.separator + "plugins.jar");
         JarFile jarFile = null;
         try {
             jarFile = new JarFile(file.getPath());
@@ -39,14 +33,13 @@ public class MyClassLoader extends SecureClassLoader {
         }
         Enumeration<JarEntry> e =jarFile.entries();
 
-        URL[] urls = new URL[0];
+        URL[] urls = new URL[1];
         try {
-            urls = new URL[]{ new URL("jar:file:" +file.getPath())};
+            urls[0]= new URL(" file:///"+file.getPath());
         } catch (MalformedURLException e1) {
             e1.printStackTrace();
         }
         URLClassLoader cl = URLClassLoader.newInstance(urls);
-
         while (e.hasMoreElements()) {
             JarEntry je = e.nextElement();
             if (je.isDirectory() || !je.getName().endsWith(".class")) {
@@ -55,9 +48,9 @@ public class MyClassLoader extends SecureClassLoader {
             //
             String className = je.getName().substring(0, je.getName().length() - 6);
             className = className.replace('/', '.');
-            Class cl = null;
+            Class cla = null;
             try {
-                cl = findClass(className);
+                cla = findClass(className);
             } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
             }
