@@ -1,5 +1,6 @@
 package moteur;
 
+import classloader.MyClassLoader;
 import plugins_basique.Robot_affichage_plugins;
 import plugins_basique.Robot_attaque_plugins;
 import plugins_basique.Robot_deplace_plugins;
@@ -194,6 +195,8 @@ public class Moteur {
         //appel au classLoader qui retourne ArrayList<Class>
         //changer le allPlugins (new) par le retour du classLoader
         ArrayList<Class> allPlugins = new ArrayList<Class>(); // return classloader
+        MyClassLoader Loader = new MyClassLoader(allPlugins);
+        Loader.loadJar();
         for(Class c:allPlugins){
             this.addClassWithAnnotation(c);
         }
