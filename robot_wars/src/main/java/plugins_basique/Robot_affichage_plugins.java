@@ -28,16 +28,16 @@ public class Robot_affichage_plugins {
     @Dessiner(argumentVie = 3, argumentEnergie = 4)
     public void dessiner(Graphics g,Point p, int life, int stamina){
         //Robot_affichage_plugins
-       /* Color base = g.getColor();
+        Color base = g.getColor();
         g.setColor(this.c);
         g.fillRect((int)p.getX()+taille/2,(int)p.getY()+taille/2,taille,taille);
-        g.setColor(base);*/
+        g.setColor(base);
 
        //Code de test en dessous à supprimer quand les autres plugins pourront être chargés
 
         //Robot_affichageImage
 
-        try {
+        /*try {
             Image img = ImageIO.read(new File("images/evil-robot.png"));
             g.drawImage(img,(int)p.getX(),(int)p.getY(),100,100,null);
         } catch (IOException e) {
@@ -56,7 +56,7 @@ public class Robot_affichage_plugins {
         //g.drawString(chaine2, (int) p.getX(), (int) p.getY()+110);
 
         g.setColor(Color.ORANGE);
-        g.fillRect((int)p.getX(), (int)p.getY() + 115, stamina, 10);
+        g.fillRect((int)p.getX(), (int)p.getY() + 115, stamina, 10);*/
 
 
     }

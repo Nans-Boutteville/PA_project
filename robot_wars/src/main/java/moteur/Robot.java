@@ -379,8 +379,9 @@ public class Robot {
 
     /**
      * Permet à un robot d'attaquer
+     *
      * @param plugins plugins avec lequel le robot va attaquer
-     * @param r robot ennemis avec lequel on va essayer d'attaquer
+     * @param r       robot ennemis avec lequel on va essayer d'attaquer
      */
     public void attaque(Object plugins, Robot r) {
         if (this.attaque.contains(plugins)) {
@@ -401,6 +402,7 @@ public class Robot {
 
     /**
      * Verifie si la méthode est une méthode d'attaque ou non
+     *
      * @param m La méthode à vérifier
      * @return true si c'est une méthode d'attaque false sinon
      */
@@ -427,8 +429,9 @@ public class Robot {
 
     /**
      * Regarde si le robot peut attaquer avec le plugins contre un robot ennemis
+     *
      * @param plugins contenant les méthode d'attaque
-     * @param r le robot ennemis
+     * @param r       le robot ennemis
      * @return si le robot peut attaquer son ennemi ou non
      */
     public boolean peutAttaquer(Object plugins, Robot r) {
@@ -436,17 +439,18 @@ public class Robot {
         if (this.attaque.contains(plugins) && plugins.getClass().getAnnotation(Attaque.class).perteEnergie() <= this.energie) {
             Class attaque = plugins.getClass();
             Method[] allMethods = attaque.getMethods();
-            for (Method m:allMethods) {
-                    if (this.goodMethodAttack(m)) {
-                        returnAttack = invokeMethodsAttack(m, plugins, this.panel.getGraphics(), r.getCoordonnee());
-                    }
+            for (Method m : allMethods) {
+                if (this.goodMethodAttack(m)) {
+                    returnAttack = invokeMethodsAttack(m, plugins, this.panel.getGraphics(), r.getCoordonnee());
                 }
             }
+        }
         return returnAttack;
     }
 
     /**
      * Quand le robot subit des degats
+     *
      * @param perteVie nombre de dégats reçus
      */
     public void degats(int perteVie) {
@@ -459,6 +463,7 @@ public class Robot {
 
     /**
      * Invoque une method d'attaque
+     *
      * @param m Methode à invoquer
      * @param o Plugins contenant la méthode à invoquer
      * @param g Graphics que la méthode à besoin
@@ -468,15 +473,15 @@ public class Robot {
     private boolean invokeMethodsAttack(Method m, Object o, Graphics g, Point p) {
         boolean returnA = false;
         Object[] args = new Object[3];
-        int increment =0;
+        int increment = 0;
         boolean pointRobotPlacer = false;
         Class[] allArgument = m.getParameterTypes();
         for (Class argument : allArgument) {
             if (argument.getName().equals(this.graphicsClassName)) {
-                args[increment]=this.panel.getGraphics();
+                args[increment] = this.panel.getGraphics();
             } else if (argument.getName().equals(this.pointClassName)) {
                 if (!pointRobotPlacer) {
-                    pointRobotPlacer=true;
+                    pointRobotPlacer = true;
                     args[increment] = this.point;
                 } else {
                     args[increment] = p;
@@ -485,7 +490,7 @@ public class Robot {
             increment++;
         }
         if (this.goodMethodAttack(m)) {
-            returnA = (Boolean) this.invoke(m,o,args[0],args[1],args[2]);
+            returnA = (Boolean) this.invoke(m, o, args[0], args[1], args[2]);
         }
 
         return returnA;
@@ -493,32 +498,59 @@ public class Robot {
 
     /**
      * Methode permettant au robot de se déplacer
-     * @param plugins plugins a appeler pour se déplacer
+     *
+     * @param plugins      plugins a appeler pour se déplacer
      * @param deplacementX Sur conmbien de pixel sur X le robot doit se déplacer
      * @param deplacementY Sur combien de pixel su Y le robot doit se déplacer
      */
     public void seDeplacer(Object plugins, int deplacementX, int deplacementY) {
+        this.seDeplacer( plugins,null, deplacementX, deplacementY);
+    }
+
+    /**
+     * Methode permettant au robot de se déplacer
+     * @param plugins plugins a appeler pour se déplacer
+     * @param ennemis ennemis (pour essayer de se rapprocher de lui par exmple)
+     * @param deplacementX Sur combien de pixel sur X le robot doit se déplacer
+     * @param deplacementY Sur combien de pixel su Y le robot doit se déplacer
+     */
+    public void seDeplacer(Object plugins, Robot ennemis, int deplacementX, int deplacementY) {
         if (this.deplacement.contains(plugins)) {
             Class deplacemen = plugins.getClass();
-            this.invokeMethodDeplacement(deplacemen.getMethods(), plugins, deplacementX, deplacementY);
+            if(ennemis!=null){
+                this.invokeMethodDeplacement(deplacemen.getMethods(), plugins, deplacementX, deplacementY, ennemis.getCoordonnee());
+            }else{
+                this.invokeMethodDeplacement(deplacemen.getMethods(), plugins, deplacementX, deplacementY, null);
+            }
+
         }
     }
 
     /**
      * Invoque une méthode de déplacmeent
-     * @param methods la méthode à appeler
+     * @param methods  la méthode à appeler
      * @param o plugins contenant la méthode à appeler
      * @param deplacementX nombre de pixel pour le déplacment sur X
      * @param deplacementY nombre de pixel pour le déplacement sur Y
+     * @param ennemis Corrodonée d'un ennemis pour essayer de se rapprocher de lui
      */
-    private void invokeMethodDeplacement(Method[] methods, Object o, int deplacementX, int deplacementY) {
-        Method methodDeplacement = this.getMethodDeplacement(methods,deplacementX,deplacementY);
+    private void invokeMethodDeplacement(Method[] methods, Object o, int deplacementX, int deplacementY, Point ennemis) {
+        ArrayList<Method> methodDeplacement = this.getMethodsDeplacement(methods, deplacementX, deplacementY, ennemis);
 
-        if (methodDeplacement != null) {
+        if (methodDeplacement.size() > 0) {
             int coutEnergie = this.coutEnergieDeplacement(o, deplacementX, deplacementY);
-            ArrayList<Object> args = getArgumentofDeplacementMethod(methodDeplacement, deplacementX, deplacementY);
-            if (coutEnergie > -1 && args.size() == 4) {
-                Point p = (Point) this.invoke(methodDeplacement, o, args.get(0), args.get(1), args.get(2), args.get(3));
+            Method methodWithoutPoint = this.getMethodWithoutPoint(methodDeplacement);
+            Method methodWithPoint = this.getMethodWithPoint(methodDeplacement);
+
+            Point p =null;
+            if (coutEnergie > -1 && methodWithPoint!=null && ennemis != null) {
+                ArrayList<Object> args = getArgumentofDeplacementMethod(methodWithPoint, deplacementX, deplacementY, ennemis);
+                p= (Point) this.invoke(methodWithoutPoint, o, args.get(0), args.get(1), args.get(2), args.get(3),args.get(4));
+            } else if (coutEnergie > -1 && methodWithoutPoint!=null) {
+                ArrayList<Object> args = getArgumentofDeplacementMethod(methodWithoutPoint, deplacementX, deplacementY, ennemis);
+                p = (Point) this.invoke(methodWithoutPoint, o, args.get(0), args.get(1), args.get(2), args.get(3));
+            }
+            if(p!=null){
                 int largeur = this.panel.getWidth();
                 int hauteur = this.panel.getHeight();
                 int x = (int) p.getX();
@@ -540,35 +572,67 @@ public class Robot {
                     e.printStackTrace();
                 }
                 this.energie -= coutEnergie;
-
-
             }
-
         }
 
     }
 
     /**
+     * Récupère la methode de déplacement qui ont besoin de du points ennemis
+     * @param methods toutes les méthodes disponible
+     * @return la méthode qui a besoin du point ennemis
+     */
+    private Method getMethodWithPoint(ArrayList<Method> methods){
+        Method m = null;
+        for(Method method:methods){
+            if(this.getArgumentofDeplacementMethod(method,0,0,new Point(0,0)).size()==5){
+                m=method;
+                break;
+            }
+        }
+        return m;
+    }
+
+    /**
+     * Récupère la methode de déplacement qui n'a pas besoin du point ennemis
+     * @param methods  toutes les méthodes disponible
+     * @return la méthode qui n'a besoin du point ennemis
+     */
+    private Method getMethodWithoutPoint(ArrayList<Method> methods) {
+        Method m = null;
+        for(Method method:methods){
+            if(this.getArgumentofDeplacementMethod(method,0,0,new Point(0,0)).size()==4){
+                m=method;
+                break;
+            }
+        }
+        return m;
+    }
+
+    /**
      * Récupéré une méthode de déplacement parmis une liste de ceux-ci
-     * @param methods liste de méthdodes comprenant peut-être une méthode de dpélacement
+     *
+     * @param methods      liste de méthdodes comprenant peut-être une méthode de dpélacement
      * @param deplacementX nombre de pixel pour le déplacment sur X
      * @param deplacementY nombre de pixel pour le déplacement sur Y
      * @return la méthode de déplacement
      */
-    private Method getMethodDeplacement(Method[] methods,int deplacementX,int deplacementY){
-        Method methodDeplacement = null;
+    private ArrayList<Method> getMethodsDeplacement(Method[] methods, int deplacementX, int deplacementY, Point ennemis) {
+        ArrayList<Method> methodDeplacement = new ArrayList<Method>();
         for (Method method : methods) {
             if (method.getAnnotation(Deplacer.class) != null && method.getReturnType().getName().equals(this.pointClassName)) {
-                methodDeplacement = method;
+                methodDeplacement.add(method);
                 break;
             }
         }
 
-        if (methodDeplacement == null) {
+        if (methodDeplacement.size() <= 0) {
             for (Method method : methods) {
-                if (this.getArgumentofDeplacementMethod(method, deplacementX, deplacementY).size() == 4 && method.getReturnType().getName().equals(this.pointClassName)) {
-                    methodDeplacement = method;
+                if (this.getArgumentofDeplacementMethod(method, deplacementX, deplacementY, ennemis).size() == 4 && method.getReturnType().getName().equals(this.pointClassName)) {
+                    methodDeplacement.add(method);
                     break;
+                }else if(this.getArgumentofDeplacementMethod(method, deplacementX, deplacementY, ennemis).size() == 5 && method.getReturnType().getName().equals(this.pointClassName)){
+                    methodDeplacement.add(method);
                 }
             }
         }
@@ -576,61 +640,28 @@ public class Robot {
     }
 
     /**
-     * Caclul d'un déplacement pour un robot (pour une IA plus complexe par exemple)
-     * @param plugins plugins de déplacmeent à appeler
-     * @param deplacementX nombre de pixel de dpélacement sur X
-     * @param deplacementY nombre de pixel de déplacmenent sur Y
-     * @return ce qui pourrait être le nouveau point du robot
-     */
-    public Point CalculPointDeplacement(Object plugins, int deplacementX, int deplacementY) {
-        if(this.deplacement.contains(plugins)){
-            Method[] methods = plugins.getClass().getMethods();
-            Method methodDeplacement = null;
-            for (Method method : methods) {
-                if (method.getAnnotation(Deplacer.class) != null && method.getReturnType().getName().equals("java.awt.Point")) {
-                    methodDeplacement = method;
-                    break;
-                }
-            }
-
-            if (methodDeplacement == null) {
-                for (Method method : methods) {
-                    if (this.getArgumentofDeplacementMethod(method, deplacementX, deplacementY).size() == 4 && method.getReturnType().getName().equals("java.awt.Point")) {
-                        methodDeplacement = method;
-                        break;
-                    }
-                }
-            }
-            if (methodDeplacement != null) {
-                int coutEnergie = this.coutEnergieDeplacement(plugins, deplacementX, deplacementY);
-                ArrayList<Object> args = getArgumentofDeplacementMethod(methodDeplacement, deplacementX, deplacementY);
-                if (coutEnergie > -1 && args.size() == 4) {
-
-                    return (Point) this.invoke(methodDeplacement, plugins, args.get(0), args.get(1), args.get(2), args.get(3));
-                }
-
-            }
-        }
-        return null;
-    }
-
-    /**
      * Récupère tous les arguments d'une méthode à invoquer
      * @param method la méthode ou on récupère tous les parmaètres à envoyer
      * @param deplacementX nombre de déplacement du robot sur X
      * @param deplacementY nombre de déplacement du robot sur Y
+     * @param ennemis coordonnées du point ennemis
      * @return tableau contenant tus les arguments à mettre lors de l'appel à la méthode
      */
-    private ArrayList<Object> getArgumentofDeplacementMethod(Method method, int deplacementX, int deplacementY) {
+    private ArrayList<Object> getArgumentofDeplacementMethod(Method method, int deplacementX, int deplacementY, Point ennemis) {
         ArrayList<Object> args = new ArrayList<Object>();
         Class[] allParameters = method.getParameterTypes();
         boolean deplacementXplacer = false;
-        if (allParameters.length == 4) {
+        boolean pointPlacer = false;
+        if (allParameters.length == 4 || allParameters.length==5) {
             for (Class parameters : allParameters) {
                 if (parameters.getName().equals(this.graphicsClassName)) {
                     args.add(this.panel.getGraphics());
                 } else if (parameters.getName().equals(this.pointClassName)) {
-                    args.add(this.point);
+                    if(!pointPlacer){
+                        args.add(this.point);
+                    }else if(ennemis!=null){
+                        args.add(ennemis);
+                    }
                 } else if (parameters.getName().equals("int")) {
                     int deplacement;
                     if (deplacementXplacer) {
@@ -648,7 +679,8 @@ public class Robot {
 
     /**
      * Calcul le cout d'énergie pour un déplacement
-     * @param plugins plugins a appeler pour le déplacement
+     *
+     * @param plugins      plugins a appeler pour le déplacement
      * @param deplacementX nombre de déplacement du robot sur X
      * @param deplacementY nombre de déplacement du robot sur Y
      * @return cout de l'energie si on utilice ce plugins
@@ -664,8 +696,9 @@ public class Robot {
 
     /**
      * Invoque Method de cour d'energie
-     * @param methods toutes les methodes qui peuvent (ou non) calculer le cout de l'energie
-     * @param o plugins contenant toutes les méthodes de clacul de déplacmeent
+     *
+     * @param methods      toutes les methodes qui peuvent (ou non) calculer le cout de l'energie
+     * @param o            plugins contenant toutes les méthodes de clacul de déplacmeent
      * @param deplacementX nombre de déplacement du robot sur X
      * @param deplacementY nombre de déplacement du robot sur Y
      * @return cout de l'energie si on utilice ce plugins

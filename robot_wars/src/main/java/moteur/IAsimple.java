@@ -51,7 +51,7 @@ public class IAsimple implements Runnable {
 
             int randDistanceX = (int) (Math.random() * robot.getEnergie());
             int randDistanceY = (int) (Math.random() * robot.getEnergie());
-
+            int aleaEnnemis = (int)  (Math.random() * this.ennemis.size());
             //System.out.println("X = " + randDistanceX);
             //System.out.println("Y = " + randDistanceY);
 
@@ -59,7 +59,7 @@ public class IAsimple implements Runnable {
                 robot.seDeplacer(deplacement.get(0), randDistanceX, randDistanceY);
             } else if (deplacement.size() > 1) {
                 int rand = (int) (Math.random() * deplacement.size());
-                robot.seDeplacer(deplacement.get(rand), randDistanceX, randDistanceY);
+                robot.seDeplacer(deplacement.get(rand),this.ennemis.get(aleaEnnemis) ,randDistanceX, randDistanceY);
             }
         } return tourfini = true;
     }

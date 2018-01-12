@@ -11,7 +11,7 @@ import java.util.Random;
 public class Robot_deplace_plugins {
 
     @Deplacer
-    public Point deplacer(Graphics g,Point depart,int deplacementX,int deplacementY){
+    public Point deplacer(Graphics g,Point depart,Point arriver, int deplacementX,int deplacementY){
         Point retour;
         int x =deplacementX;
         int y = deplacementY;
@@ -36,6 +36,34 @@ public class Robot_deplace_plugins {
         }
 
        return retour;
+    }
+
+    @Deplacer
+    public Point deplacer(Graphics g,Point depart, int deplacementX,int deplacementY){
+        Point retour;
+        int x =deplacementX;
+        int y = deplacementY;
+
+        Random random = new Random();
+        boolean alea= random.nextBoolean();
+        boolean alea2 = random.nextBoolean();
+        if(alea){
+            if (alea2){
+                retour=new Point((int)depart.getX()+x,(int)depart.getY()+y);
+            } else {
+                retour=new Point((int)depart.getX()+x,(int)depart.getY()-y);
+            }
+
+        }else{
+            if(alea2){
+                retour= new Point((int)depart.getX()-x,(int)depart.getY()+y);
+            } else{
+                retour= new Point((int)depart.getX()-x,(int)depart.getY()-y);
+            }
+
+        }
+
+        return retour;
     }
 
     @CalculDeplacement
