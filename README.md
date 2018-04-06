@@ -1,1 +1,2 @@
-# PA_project
+# MIAGE_2018_PROGRAMMATION_AVANCEE_PROJET
+Projet rélaiser en MIAGE permettant d'améliorer nos connaissances en JAVA, avec notamment ce qui concerne la retrospection et le classLoader. Le projet est sous la forme d'un petit jeu (des robots qui peuvent se battre se déplacer) avec la thecnologie des plugins. Ainsi toutes personnes voulant rajouter des plugins (affichage/déplacement/attaque pour le robot) peut simplement en rajouter dans un fichier jar. Les plugins fonctionne grâce à un système d'annotation. Pour plus de détail veuillez regarder les documents PDF.
